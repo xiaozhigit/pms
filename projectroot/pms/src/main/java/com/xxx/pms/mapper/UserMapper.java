@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
+
 @Repository
 public interface UserMapper extends Mapper<SysUser> {
     // 这种继承Mapper的方式 可以不用mapper.xml文件

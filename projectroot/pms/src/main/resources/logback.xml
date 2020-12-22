@@ -7,7 +7,7 @@
 
 	<!-- 自定义属性 -->
 	<property name="charset" value="UTF-8"/>
-	<property name="log_dir" value="D:/data/vcard/logs"/>
+	<property name="log_dir" value="f:/data/vcard/logs"/>
 	<property name="maxHistory" value="30"/>
 	<!-- 两个属性 key:标识此<timestamp> 的名字；datePattern：设置将当前时间（解析配置文件的时间）
 		转换为字符串的模式，遵循java.txt.SimpleDateFormat的格式。 -->
