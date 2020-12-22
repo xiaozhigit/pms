@@ -1,4 +1,4 @@
-package com.xxx.pms.entity.vo;
+package com.xxx.pms.po;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

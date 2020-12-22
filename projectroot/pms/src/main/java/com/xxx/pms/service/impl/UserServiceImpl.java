@@ -6,7 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import com.xxx.pms.entity.SysUser;
-import com.xxx.pms.entity.vo.RequestParamPage;
+import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.UserService;

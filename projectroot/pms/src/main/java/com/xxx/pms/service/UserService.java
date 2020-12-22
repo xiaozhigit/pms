@@ -3,7 +3,7 @@ package com.xxx.pms.service;
 
 import com.github.pagehelper.Page;
 import com.xxx.pms.entity.SysUser;
-import com.xxx.pms.entity.vo.RequestParamPage;
+import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 
 public interface UserService {

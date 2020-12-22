@@ -2,7 +2,7 @@ package com.xxx.pms.controller;
 
 
 import com.xxx.pms.entity.SysUser;
-import com.xxx.pms.entity.vo.RequestParamPage;
+import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.AuthService;
 import com.xxx.pms.service.UserService;
