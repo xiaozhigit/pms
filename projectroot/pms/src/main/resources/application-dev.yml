@@ -25,7 +25,7 @@ spring:
 #    add-mappings: false
     #static-locations: classpath:classpath:/static/,classpath:/image/,classpath:/resources/
   datasource:
-    url: jdbc:mysql://47.108.113.224:3306/pm?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://47.108.113.224:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
     username: root
     password: xxxkj123!@#
 

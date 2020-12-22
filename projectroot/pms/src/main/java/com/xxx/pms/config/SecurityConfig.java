@@ -53,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 // 配置无需认证的资源
-                .antMatchers( "/doc.html","/auth/login").permitAll()//"/sign", "/error/**","/swagger-resources","/v2/api-docs",
-                .antMatchers("/**","/swaggerTest").permitAll()///auth/login
+                .antMatchers( "/doc.html").permitAll()//"/sign", "/error/**","/swagger-resources","/v2/api-docs",
+                .antMatchers("/auth/login","/swaggerTest").permitAll()///auth/login
 //                .antMatchers("/admin/**").hasAnyRole("ADMIN") //admin开头的请求，需要admin权限
 //                .antMatchers("/article/**").hasRole("USER") //需登陆才能访问的url
 //                .antMatchers("/logout").authenticated()

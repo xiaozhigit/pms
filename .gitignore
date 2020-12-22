@@ -1,3 +1,9 @@
+
 /projectroot/.idea
 /projectroot/pms/*.iml
 /projectroot/*.iml
+projectroot/.idea/
+*.iml
+.idea/
+projectroot/pms/target/
+/projectroot/pms/target
