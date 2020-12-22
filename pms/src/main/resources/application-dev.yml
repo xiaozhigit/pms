@@ -1,0 +1,74 @@
+server:
+  port: 7081
+  servlet: 
+    context-path:  /
+spring:
+  application:
+    name: PMS-server
+   #出现错误时, 直接抛出异常(便于异常统一处理，否则捕获不到404)  为了处理404的请求自定义返回值
+#  mvc:
+#    throw-exception-if-no-handler-found: true
+  #redis:
+    #host: localhost
+    #port: 6379
+    #password: 123456
+    #timeout: 10000 #客户端超时时间单位是毫秒 默认是2000 
+    #pool:
+      #max-idle: 100#最大空闲数 
+      #min-idle: 1
+      #max-active: 1000
+      #max-wait: -1
+  #rabbitmq:
+    #port: 5672
+#  resources:
+    #不要为我们工程中的资源文件建立映射  为了处理404的请求自定义返回值
+#    add-mappings: false
+    #static-locations: classpath:classpath:/static/,classpath:/image/,classpath:/resources/
+  datasource:
+    url: jdbc:mysql://47.108.113.224:3306/pm?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    username: root
+    password: xxxkj123!@#
+
+mybatis:
+  #config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath*:mapping/*.xml
+  type-aliases-package: com.xxx.pms.entity
+   #进行自动映射时，数据以下划线命名，如数据库返回的"order_address"命名字段是否映射为class的"orderAddress"字段。默认为false
+  map-underscore-to-camel-case: true
+  #设置在控制台打印sql
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  level:
+    root: info
+  config: classpath:logback.xml
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:7000/eureka/
+#hystrix:
+#  command:
+#    default:
+#      execution:
+#        isolation:
+#          thread:
+#            timeoutInMilliseconds: 5000
+
+#pagehelper
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+#swagger 接口文档的开启和关闭
+swagger:
+  enable: true
+#公司和用户logo图片路径配置
+image:
+  companyLogoAccessPath: /img/companyLogo/**
+  companyLogoLocationPath: file:D:/images/companyLogo/
+  userLogoAccessPath: /img/userLogo/**
+  userLogoLocationPath: file:D:/images/userLogo/
+
+

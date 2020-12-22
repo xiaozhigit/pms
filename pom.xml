@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.xxx</groupId>
+    <artifactId>projectroot</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>vcard</module>
+    </modules>
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--springboot 配置-->
+        <spring-boot.version>2.3.1.RELEASE</spring-boot.version>
+        <!--分页插件 配置-->
+        <pagehelper.version>1.2.10</pagehelper.version>
+        <!--mybatis 配置-->
+        <mybatis-spring-boot-starter.version>1.3.2</mybatis-spring-boot-starter.version>
+        <tk.mybatis.version>2.1.4</tk.mybatis.version>
+        <!--jwt 配置-->
+        <java-jw.version>3.10.3</java-jw.version>
+        <jjwt.version>0.9.1</jjwt.version>
+        <!--swagger 配置-->
+        <swagger2.version>2.8.0</swagger2.version>
+        <swagger-bootstrap-ui.version>1.9.0</swagger-bootstrap-ui.version>
+
+
+        <!--插件配置-->
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-source-plugin.version>2.2.1</maven-source-plugin.version>
+        <maven-war-plugin.version>2.6</maven-war-plugin.version>
+        <mybatis-generator-maven-plugin.version>1.3.2</mybatis-generator-maven-plugin.version>
+        <maven-resources-plugin.version>2.5</maven-resources-plugin.version>
+        <maven-rar-plugin.version>2.3</maven-rar-plugin.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--加入springboot依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--mybatis的依赖-->
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis-spring-boot-starter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>tk.mybatis</groupId>
+                <artifactId>mapper-spring-boot-starter</artifactId>
+                <version>${tk.mybatis.version}</version>
+            </dependency>
+
+            <!--jwt依赖-->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java-jw.version}</version>
+            </dependency>
+            <!--jjwt依赖-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <!--swagger依赖-->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>swagger-bootstrap-ui</artifactId>
+                <version>${swagger-bootstrap-ui.version}</version>
+            </dependency>
+
+            <!--分页的依赖-->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <!-- json依赖 -->
+            <!--<dependency>
+                <groupId>net.sf.json-lib</groupId>
+                <artifactId>json-lib</artifactId>
+                <version>2.4</version>
+                <classifier>jdk15</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>1.2.73</version>
+            </dependency>
+            springboot包中有直接引用
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.6</version>
+            </dependency>-->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- 打jar包  把依赖的jar包放在生成的jar包里面  开始 -->
+                <!-- ps   只要下面两个插件就可以 -->
+                <!-- <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <configuration>
+                        指定SpringBoot程序的main函数入口类
+                        <mainClass>ly.ly_eureka_server.EurekaServerApplication</mainClass>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <skipTests>true</skipTests>
+                        <encoding>UTF-8</encoding>
+                        <compilerArguments>
+                            打包本地jar包
+                            <extdirs>${project.basedir}/lib</extdirs>
+                        </compilerArguments>
+                    </configuration>
+                </plugin> -->
+
+                <!-- 打jar包  把依赖的jar包放在生成的jar包里面  结束 -->
+
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <!-- 没有下面的配置，devtools(自动部署) maven 热启动不生效 -->
+                    <configuration>
+                        <fork>true</fork>
+                    </configuration>
+                </plugin>
+
+                <!--maven 编译插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <!-- 跳过测试 -->
+                        <!--<skipTests>true</skipTests>-->
+                        <showWarnings>true</showWarnings>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- 打jar包  依赖的包不再jar包里面  而在平行目录的lib目录下  开始 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <!-- 清单文件 -->
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                                <mainClass>ly.ly_eureka_server.EurekaServerApplication</mainClass>
+                            </manifest>
+                            <!-- 有时为了方便，可以把classpath初在当前目录上，默认的classpath会在jar包内,可以在Main方法配置后加上manifestEntries配置，指定classpath,如: -->
+                            <manifestEntries>
+                                <Class-Path>.</Class-Path>
+                            </manifestEntries>
+                        </archive>
+                        <classesDirectory>
+                        </classesDirectory>
+                    </configuration>
+                </plugin>
+
+                <!-- maven把 依赖的包也打包进去 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>copy</id>
+                            <phase>package</phase>
+                            <!-- <phase>install</phase> -->
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 打jar包  依赖的包不再jar包里面  而在平行目录的lib目录下  结束 -->
+
+                <!-- 为jar文件生成source文件  开始-->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <configuration>
+                        <attach>true</attach>
+                        <!--<encoding>UTF-8</encoding>-->
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 为jar文件生成source文件  结束-->
+
+                <!-- 解决资源文件的编码问题 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
+                <!-- 打war包插件 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
+                    <configuration>
+                        <!-- 规避检查src/main/webapp/WEB-INF下没有web.xml文件 -->
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                        <!-- true:打包包含空文件夹 -->
+                        <includeEmptyDirectories>true</includeEmptyDirectories>
+                        <warName>${project.artifactId}</warName>
+                    </configuration>
+                </plugin>
+
+                <!-- mybatis 自动生成配置文件插件 -->
+                <plugin>
+                    <groupId>org.mybatis.generator</groupId>
+                    <artifactId>mybatis-generator-maven-plugin</artifactId>
+                    <version>${mybatis-generator-maven-plugin.version}</version>
+                    <configuration>
+                        <!-- mybatis用于生成代码的配置文件 -->
+                        <configurationFile>src/main/resources/generatorConfig.xml
+                        </configurationFile>
+                        <verbose>true</verbose>
+                        <overwrite>true</overwrite>
+                    </configuration>
+                </plugin>
+                <!-- rar包插件 -->
+                <!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-rar-plugin</artifactId>
+                    <version>${maven-rar-plugin.version}</version> <executions> <execution> <goals>
+                    <goal>rar</goal> </goals> <phase>package</phase> </execution> </executions>
+                    <configuration> <includeJar>true</includeJar> </configuration> </plugin> -->
+
+            </plugins>
+        </pluginManagement>
+    </build>
+
+
+</project>
