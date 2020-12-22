@@ -29,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService{
 		sysUser.setUsername(username);
 		sysUser = userMapper.selectOne(sysUser);
 		//获取用户权限
-		User user = new User(username,sysUser.getPassword() , AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_admin"));
+		User user = new User(username,sysUser.getPassword() , AuthorityUtils.commaSeparatedStringToAuthorityList(""));
 		System.out.println(user.getPassword());
 	    return user;
     }
