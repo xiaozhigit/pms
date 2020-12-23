@@ -2,7 +2,7 @@ package com.xxx.pms.service;
 
 
 import com.github.pagehelper.Page;
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 
@@ -14,14 +14,14 @@ public interface UserService {
      * @param pageSize
      * @return
      */
-    Page<SysUser> findUserListByPage(Integer pageNo, Integer pageSize);
+    Page<User> findUserListByPage(Integer pageNo, Integer pageSize);
 
     /**
      * 根据用户名称查询用户信息
      * @param username
      * @return
      */
-    SysUser findUserByUsername(String username);
+    User findUserByUsername(String username);
 
 
     /**
@@ -29,14 +29,14 @@ public interface UserService {
      * @param user
      * @return
      */
-    Response addUser(SysUser user);
+    Response addUser(User user);
 
     /**
      * 修改用户
      * @param user
      * @return
      */
-    Response updateUser(SysUser user);
+    Response updateUser(User user);
 
     /**
      * 查询用户
@@ -57,7 +57,7 @@ public interface UserService {
      * @param form
      * @return
      */
-    Response getUserListByPage(RequestParamPage<SysUser> form);
+    Response getUserListByPage(RequestParamPage<User> form);
 
 
 }

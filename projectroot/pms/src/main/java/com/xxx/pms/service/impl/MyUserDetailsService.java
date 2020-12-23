@@ -1,11 +1,10 @@
 package com.xxx.pms.service.impl;
 
 
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,11 +24,11 @@ public class MyUserDetailsService implements UserDetailsService{
 	@Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// 获取用户信息
-		SysUser sysUser = new SysUser();
+		User sysUser = new User();
 		sysUser.setUsername(username);
 		sysUser = userMapper.selectOne(sysUser);
 		//获取用户权限
-		User user = new User(username,sysUser.getPassword() , AuthorityUtils.commaSeparatedStringToAuthorityList(""));
+		org.springframework.security.core.userdetails.User user = new org.springframework.security.core.userdetails.User(username,sysUser.getPassword() , AuthorityUtils.commaSeparatedStringToAuthorityList(""));
 		System.out.println(user.getPassword());
 	    return user;
     }

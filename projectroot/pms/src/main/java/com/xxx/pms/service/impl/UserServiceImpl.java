@@ -5,7 +5,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Page<SysUser> findUserListByPage(Integer pageNo, Integer pageSize){
+    public Page<User> findUserListByPage(Integer pageNo, Integer pageSize){
         PageHelper.startPage(pageNo, pageSize);
-        return (Page<SysUser>) userMapper.selectAll();
+        return (Page<User>) userMapper.selectAll();
     }
 
     /**
@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public SysUser findUserByUsername(String username){
-        SysUser user = new SysUser();
+    public User findUserByUsername(String username){
+        User user = new User();
         user.setUsername(username);
         return userMapper.selectOne(user);
     }
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response addUser(SysUser user) {
+    public Response addUser(User user) {
         //随机生成id
         user.setId("sss");
         //对密码加密
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response updateUser(SysUser user) {
+    public Response updateUser(User user) {
         userMapper.updateByPrimaryKeySelective(user);
         return ResponseUtils.success();
     }
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Response getUserById(String id) {
-        SysUser user = userMapper.selectByPrimaryKey(id);
+        User user = userMapper.selectByPrimaryKey(id);
         return ResponseUtils.successData(user);
     }
 
@@ -105,10 +105,10 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response getUserListByPage(RequestParamPage<SysUser> form) {
+    public Response getUserListByPage(RequestParamPage<User> form) {
         PageHelper.startPage(form.getPage(), form.getPageSize());
-        List<SysUser> userList = userMapper.select(form.getParam());
-        PageInfo<SysUser> pageInfo = new PageInfo<>(userList);
+        List<User> userList = userMapper.select(form.getParam());
+        PageInfo<User> pageInfo = new PageInfo<>(userList);
         return ResponseUtils.successData(pageInfo);
     }
 }

@@ -12,11 +12,10 @@ import java.util.Date;
  */
 @Data
 @Table(name = "sys_user_favorite_menu")
-public class SysUserFavoriteMenu {
+public class UserFavoriteMenu {
     /**
      *
      *   ID
-     
      */
     @Id
     private Integer id;
@@ -24,28 +23,24 @@ public class SysUserFavoriteMenu {
     /**
      *
      *   用户ID
-     
      */
     private Integer userId;
 
     /**
      *
      *   菜单ID
-     
      */
     private Integer menuId;
 
     /**
      *
      *   创建时间
-     
      */
     private Date gmtCreate;
 
     /**
      *
      *   排序
-     
      */
     private Byte sort;
     

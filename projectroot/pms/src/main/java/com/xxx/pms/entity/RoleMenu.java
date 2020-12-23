@@ -6,32 +6,26 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- *   公司对应的菜单表
+ *   角色对应的菜单表
+ *
  */
 @Data
-@Table(name = "sys_company_menu")
-public class SysCompanyMenu {
+@Table(name = "sys_role_menu")
+public class RoleMenu {
     /**
      *   ID
-     *
-     * @mbg.generated
      */
     @Id
     private Integer id;
 
     /**
-     *   公司ID
-     *
-     *
-     * @mbg.generated
+     *   角色ID
      */
-    private Integer companyId;
+    private Integer roleId;
 
     /**
-     *   目录ID
-     *
+     *   菜单ID
      */
     private Integer menuId;
-
-
+    
 }

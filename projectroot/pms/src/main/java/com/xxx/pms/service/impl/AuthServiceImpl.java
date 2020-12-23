@@ -3,7 +3,7 @@ package com.xxx.pms.service.impl;
 
 
 import com.xxx.pms.constant.AccessStateCodeConstant;
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.AuthService;
@@ -16,7 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         // 根据用户名查询用户信息
-        SysUser user = new SysUser();
+        User user = new User();
         user.setUsername(username);
         user = userMapper.selectOne(user);
         // 根据用户信息生成token
@@ -76,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
         }catch (Exception e){
             return ResponseUtils.fillState(AccessStateCodeConstant.TOKEN_ERROR);
         }
-        SysUser user = userMapper.selectByPrimaryKey(claims.getSubject());
+        User user = userMapper.selectByPrimaryKey(claims.getSubject());
         claims.put("companyId",user.getCompanyId());
         String newToken = JwtUtils.generateToken(user.getId(),claims);
         return ResponseUtils.successData(newToken);

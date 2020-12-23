@@ -1,7 +1,7 @@
 package com.xxx.pms.controller;
 
 
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.AuthService;
@@ -47,7 +47,7 @@ public class UserController {
             @ApiImplicitParam(name = "form" , value = "创建用户表单" , dataType = "SysUser")
     })
     @PostMapping("addUser")
-    public Response addUser(@RequestBody SysUser form){
+    public Response addUser(@RequestBody User form){
         return userService.addUser(form);
     }
 
@@ -58,7 +58,7 @@ public class UserController {
             @ApiImplicitParam(name = "form" , value = "修改后的用户表单数据" , dataType = "SysUser")
     })
     @PostMapping("updateUser")
-    public Response updateUser(@RequestBody SysUser form){
+    public Response updateUser(@RequestBody User form){
         return userService.updateUser(form);
     }
 
@@ -88,7 +88,7 @@ public class UserController {
     @ApiOperation(value = "分页条件查询用户列表", notes = "分页条件查询用户列表")
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
     @PostMapping("getUserListByPage")
-    public Response getUserListByPage(@RequestBody RequestParamPage<SysUser> form){
+    public Response getUserListByPage(@RequestBody RequestParamPage<User> form){
         return userService.getUserListByPage(form);
     }
 

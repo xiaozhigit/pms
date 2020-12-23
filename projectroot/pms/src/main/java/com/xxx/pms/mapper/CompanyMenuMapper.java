@@ -1,9 +1,10 @@
 package com.xxx.pms.mapper;
 
-import com.xxx.pms.entity.SysDictionary;
+import com.xxx.pms.entity.CompanyMenu;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
+
 @Repository
-public interface SysDictionaryMapper extends Mapper<SysDictionary> {
+public interface CompanyMenuMapper extends Mapper<CompanyMenu> {
 }

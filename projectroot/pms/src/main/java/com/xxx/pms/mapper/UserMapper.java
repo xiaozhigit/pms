@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.Map;
 
 
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import org.apache.ibatis.annotations.Select;
 
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
 @Repository
-public interface UserMapper extends Mapper<SysUser> {
+public interface UserMapper extends Mapper<User> {
     // 这种继承Mapper的方式 可以不用mapper.xml文件
 
     public List<Map<String, Object>> getAllUserBySelf();

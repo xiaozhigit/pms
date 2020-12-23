@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Table(name = "sys_company")
-public class SysCompany {
+public class Company {
     /**
      *   编号
      */

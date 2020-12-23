@@ -2,7 +2,7 @@ package com.xxx.pms.controller;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;
-import com.xxx.pms.entity.SysUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.UserService;
@@ -23,9 +23,9 @@ public class AutoSqlController {
 
     @RequestMapping(value = "autoSql1")
     public Response autoSql1(Integer pageNo, Integer pageSize) {
-        Page<SysUser> users = (Page<SysUser>) userService.findUserListByPage(pageNo,pageSize);
+        Page<User> users = (Page<User>) userService.findUserListByPage(pageNo,pageSize);
         // 需要把Page包装成PageInfo对象才能序列化。该插件也默认实现了一个PageInfo
-        PageInfo<SysUser> pageInfo = new PageInfo<>(users);
+        PageInfo<User> pageInfo = new PageInfo<>(users);
         return ResponseUtils.successData(pageInfo);
     }
 
