@@ -43,7 +43,7 @@ public class Menu {
     /**
      *   同级别的顺序，从0开始
      */
-    private int sort;
+    private Integer sort;
 
     /**
      *   描述

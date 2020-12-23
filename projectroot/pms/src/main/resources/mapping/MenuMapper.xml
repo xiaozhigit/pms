@@ -4,8 +4,8 @@
 
 
     <select id="selectMenusByIds" resultType="com.xxx.pms.entity.Menu">
-        select * from sys_menu where id
-            <foreach collection="list" item="menuIds" open="(" close=")" separator=",">
+        select * from sys_menu where id in
+            <foreach collection="list" item="menuId" open="(" close=")" separator=",">
                 #{menuId}
             </foreach>
 	</select>
