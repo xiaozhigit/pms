@@ -11,9 +11,11 @@ import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.UserService;
 import com.xxx.pms.util.ResponseUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -83,9 +85,8 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response getUserById(String id) {
-        User user = userMapper.selectByPrimaryKey(id);
-        return ResponseUtils.successData(user);
+    public User getUserById(Integer id) {
+       return userMapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -110,5 +111,22 @@ public class UserServiceImpl implements UserService {
         List<User> userList = userMapper.select(form.getParam());
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         return ResponseUtils.successData(pageInfo);
+    }
+
+    @Override
+    public List<User> selectUsersByCompanyIdAndRoleId(Integer companyId, Integer roleId) {
+        Example example=new Example(User.class);
+        example.and().andEqualTo("companyId",companyId).andEqualTo("roleId",roleId);
+        return userMapper.selectByExample(example);
+    }
+
+    @Override
+    public int updateUserRoleIdByCompanyIdAndRoleId(Integer companyId, Integer roleId) {
+//        Example example =Example.builder(User.class).select("companyId",companyId).andEqualTo("roleId",roleId).build();
+//        Example.builder(User.class).where(s)
+//        Example example = new Example(User.class);
+//        Example.Criteria criteria=example.createCriteria().andEqualTo("roleId",roleId);
+//        user.setRoleId(null);
+        return userMapper.updateUserRoleIdByCompanyIdAndRoleId(companyId,roleId);
     }
 }

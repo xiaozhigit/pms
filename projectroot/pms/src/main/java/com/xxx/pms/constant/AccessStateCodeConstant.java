@@ -12,6 +12,14 @@ public interface AccessStateCodeConstant {
      */
     public static final String[] SUCCESS_CODE = {"0000", "操作成功"};
     /**
+     * "200","访问成功"
+     */
+    public static final String[] SUCCESS = {"200", "操作成功"};
+    /**
+     * "400","操作失败"
+     */
+    public static final String[] FAIL = {"400", "操作失败"};
+    /**
      * "0001", "用户名不存在"
      */
     public static final String[] USERNAME_NOT_FOUND_CODE = {"0001", "用户名不存在"};

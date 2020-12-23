@@ -6,10 +6,12 @@ import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.AuthService;
 import com.xxx.pms.service.UserService;
+import com.xxx.pms.util.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,7 +72,8 @@ public class UserController {
     })
     @GetMapping("getUserById")
     public Response getUserById(String id){
-        return userService.getUserById(id);
+        User user= userService.getUserById(Integer.valueOf(id));
+        return ResponseUtils.successData(user);
     }
 
 

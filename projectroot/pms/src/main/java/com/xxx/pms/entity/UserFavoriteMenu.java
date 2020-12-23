@@ -42,6 +42,6 @@ public class UserFavoriteMenu {
      *
      *   排序
      */
-    private Byte sort;
+    private Integer sort;
     
 }

@@ -1,5 +1,6 @@
 package com.xxx.pms.entity;
 
+import io.swagger.models.auth.In;
 import lombok.Data;
 
 import javax.persistence.Id;
@@ -14,7 +15,7 @@ public class User {
     /**
      *   公司ID
      */
-    private String companyId;
+    private Integer companyId;
 
     /**
      *   昵称/姓名
@@ -39,12 +40,12 @@ public class User {
     /**
      *   角色ID
      */
-    private String roleId;
+    private Integer roleId;
 
     /**
      *   创建人ID
      */
-    private String createId;
+    private Integer createId;
 
     /**
      *   头像
@@ -56,10 +57,6 @@ public class User {
      */
     private Date gmtCreate;
 
-    /**
-     *   更新时间
-     */
-    private Date gmtModified;
 
     /**
      *   1正常0禁用

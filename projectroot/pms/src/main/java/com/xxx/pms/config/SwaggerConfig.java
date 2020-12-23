@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .groupName("groupName")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.xxx.vcard")) // 指定扫描包路径
+                .apis(RequestHandlerSelectors.basePackage("com.xxx.pms")) // 指定扫描包路径
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -47,7 +47,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return  new ApiInfoBuilder()
                 //文档标题会展示在文档最上方加大加粗显示
-                .title("电子名片系统")
+                .title("pms系统")
                 //会显示在标题下的一段描述
                 .description("接口文档详情")
                 .contact(new Contact("LY", null, null))// 创建者信息
