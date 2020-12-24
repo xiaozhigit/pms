@@ -34,6 +34,9 @@ public class MenuServiceImpl implements MenuService {
     @Resource
     private CompanyMenuMapper companyMenuMapper;
 
+    @Resource
+    private UserMapper userMapper;
+
 
     @Override
     public int add(Menu menu) {
@@ -69,7 +72,9 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public List<Menu> selectMenusByUserId(Integer usrId) {
         //查询用户角色
-        User user=userService.getUserById(usrId);
+     //   User user=userService.getUserById(usrId);
+        User user = userMapper.selectByPrimaryKey(usrId);
+
         //根据角色查询其拥有的菜单id
         List<Integer> menuIds=roleMenuMapper.selectRoleMenuByRoleId(user.getRoleId());
         //根据菜单id查询菜单
