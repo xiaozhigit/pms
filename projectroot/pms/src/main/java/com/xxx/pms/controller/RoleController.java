@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 
 @Api(tags={"角色管理"})
 @RestController
-@RequestMapping("/")
+@RequestMapping("/role")
 public class RoleController {
     @Resource
     private RoleService roleService;
@@ -28,10 +28,10 @@ public class RoleController {
             @ApiImplicitParam(name="role",value="角色实体类",dataType="Role",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    @PostMapping("role")
+    @PostMapping("addRole")
     public Response addRole(@RequestBody Role role){
         int  result= roleService.add(role);
-        return result>0? ResponseUtils.error():ResponseUtils.error();
+        return result>0? ResponseUtils.success():ResponseUtils.error();
     }
 
     @ApiOperation(value = "通过角色id删除角色", notes="删除角色接口")
@@ -39,10 +39,10 @@ public class RoleController {
             @ApiImplicitParam(name="id",value="角色实体类id",dataType="Integer",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    @DeleteMapping("role/{id}")
-    public Response deleteRoleById(@PathVariable String id){
-        int  result= roleService.deleteById(Integer.valueOf(id));
-        return result>0? ResponseUtils.error():ResponseUtils.error();
+    @PostMapping("deleteRoleById")
+    public Response deleteRoleById(Integer id){
+        int  result= roleService.deleteById(id);
+        return result>0? ResponseUtils.success():ResponseUtils.error();
     }
 
     @ApiOperation(value = "通过角色id更新角色", notes="更新角色接口")
@@ -50,21 +50,18 @@ public class RoleController {
             @ApiImplicitParam(name="role",value="角色实体类",dataType="Role",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
-    @PatchMapping("role")
+    @PostMapping("updateRoleById")
     public Response updateRoleById(@RequestBody Role role){
         int  result= roleService.updateById(role);
-        return result>0? ResponseUtils.error():ResponseUtils.error();
+        return result>0? ResponseUtils.success():ResponseUtils.error();
     }
 
-    @ApiOperation(value = "分页查询角色", notes="分页查询角色接口")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name="paramPage",value="分页查询实体类",dataType="RequestParamPage<Role>",required=true)
-//    })
-    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
-    @GetMapping("role")
-    public Response getRoleByPage(@RequestBody RequestParamPage<Role> paramPage){
-        PageInfo<Role>  result= roleService.selectByPage(paramPage);
-        return  ResponseUtils.successData(result);
+    @ApiOperation(value = "分页条件查询角色", notes = "分页条件查询角色接口")
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("getRoleByPage")
+    public Response getRoleByPage(@RequestBody  RequestParamPage<Role> paramPage) {
+        PageInfo<Role> result = roleService.selectByPage(paramPage);
+        return ResponseUtils.successData(result);
     }
 
 }

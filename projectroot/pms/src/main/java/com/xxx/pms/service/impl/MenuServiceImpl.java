@@ -23,9 +23,6 @@ public class MenuServiceImpl implements MenuService {
     private MenuMapper menuMapper;
 
     @Resource
-    private UserService userService;
-
-    @Resource
     private RoleMenuMapper roleMenuMapper;
 
     @Resource
@@ -67,19 +64,21 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<Menu> selectMenusByUserId(Integer usrId) {
-        //查询用户角色
-        User user=userService.getUserById(usrId);
-        //根据角色查询其拥有的菜单id
-        List<Integer> menuIds=roleMenuMapper.selectRoleMenuByRoleId(user.getRoleId());
-        //根据菜单id查询菜单
-        return selectMenusByMenuIds(menuIds);
+    public List<Menu> selectMenusByUserId(Integer userId) {
+        return menuMapper.selectMenusByUserId(userId);
+//        //查询用户角色
+//        User user=userService.getUserById(userId);
+//        //根据角色查询其拥有的菜单id
+//        List<Integer> menuIds=roleMenuMapper.selectRoleMenuByRoleId(user.getRoleId());
+//        //根据菜单id查询菜单
+//        return selectMenusByMenuIds(menuIds);
     }
 
     @Override
-    public List<Menu> selectFavoriteMenusByUserId(Integer usrId) {
-        List<Integer> menuIds=userFavoriteMenuMapper.selectMenuIdsByUserId(usrId);
-        return selectMenusByMenuIds(menuIds);
+    public List<Menu> selectFavoriteMenusByUserId(Integer userId) {
+            return  menuMapper.queryFavoriteMenusByUserId(userId);
+//        List<Integer> menuIds=userFavoriteMenuMapper.selectMenuIdsByUserId(userId);
+//        return selectMenusByMenuIds(menuIds);
     }
 
     @Override

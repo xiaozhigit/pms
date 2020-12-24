@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(tags={"菜单管理"})
 @RestController
-@RequestMapping("/")
+@RequestMapping("/menu")
 public class MenuController {
 
     @Resource
@@ -27,7 +27,7 @@ public class MenuController {
             @ApiImplicitParam(name="menu",value="菜单实体类",dataType="Menu",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    @PostMapping("menu")
+    @PostMapping("addMenu")
     public Response addMenu(@RequestBody Menu menu){
         int  result= menuService.add(menu);
         return result>0?ResponseUtils.success(): ResponseUtils.error();
@@ -38,9 +38,9 @@ public class MenuController {
             @ApiImplicitParam(name="id",value="菜单实体类id",dataType="Integer",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    @DeleteMapping("menu/{id}")
-    public Response deleteMenuById(@RequestParam String id){
-        int  result= menuService.deleteById(Integer.valueOf(id));
+    @PostMapping("deleteMenuById")
+    public Response deleteMenuById(Integer id){
+        int  result= menuService.deleteById(id);
         return result>0?ResponseUtils.success(): ResponseUtils.error();
     }
 
@@ -49,7 +49,7 @@ public class MenuController {
             @ApiImplicitParam(name="menu",value="菜单实体类",dataType="Menu",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    @PatchMapping("menu")
+    @PostMapping("updateMenuById")
     public Response updateMenuById(@RequestBody Menu menu){
         int  result= menuService.updateById(menu);
         return result>0?ResponseUtils.success(): ResponseUtils.error();
@@ -57,8 +57,8 @@ public class MenuController {
 
     @ApiOperation(value = "查询所有菜单", notes="查询所有菜单接口")
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
-    @GetMapping("menu")
-    public Response getMenusByPage(){
+    @PostMapping("getAllMenus")
+    public Response getAllMenus(){
         List<Menu> result= menuService.selectAll();
         return  ResponseUtils.successData(result);
     }
@@ -68,9 +68,9 @@ public class MenuController {
             @ApiImplicitParam(name="userId",value="用户id",dataType="Integer",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
-    @GetMapping("userMenus/{userId}")
-    public Response getMenusByUserId(@PathVariable String userId){
-        List<Menu> result= menuService.selectMenusByUserId(Integer.valueOf(userId));
+    @PostMapping("getMenusByUserId")
+    public Response getMenusByUserId(Integer userId){
+        List<Menu> result= menuService.selectMenusByUserId(userId);
         return  ResponseUtils.successData(result);
     }
 
@@ -79,9 +79,9 @@ public class MenuController {
             @ApiImplicitParam(name="userId",value="用户id",dataType="Integer",required=true)
     })
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
-    @GetMapping("userFavoriteMenus/{userId}")
-    public Response getFavoriteMenusByUserId(@PathVariable String userId){
-        List<Menu> result= menuService.selectFavoriteMenusByUserId(Integer.valueOf(userId));
+    @PostMapping("getFavoriteMenusByUserId")
+    public Response getFavoriteMenusByUserId(Integer userId){
+        List<Menu> result= menuService.selectFavoriteMenusByUserId(userId);
         return  ResponseUtils.successData(result);
     }
 

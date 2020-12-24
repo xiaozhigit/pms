@@ -20,6 +20,8 @@ public interface UserMapper extends Mapper<User> {
 
     @Select("select * from sys_user where 1=1")
     public List<Map<String, Object>> getAllUserBySelfSql();
+    
+    
     @Update("update sys_user set role_id=null where company_id=#{companyId} and role_id=#{roleId}")
     int updateUserRoleIdByCompanyIdAndRoleId(@Param("companyId") Integer companyId,@Param("roleId") Integer roleId);
 

@@ -129,4 +129,9 @@ public class UserServiceImpl implements UserService {
 //        user.setRoleId(null);
         return userMapper.updateUserRoleIdByCompanyIdAndRoleId(companyId,roleId);
     }
+
+    @Override
+    public int updateUserRoleIdByRoleId(Integer roleId) {
+        return userMapper.updateUserRoleIdByRoleId(roleId);
+    }
 }

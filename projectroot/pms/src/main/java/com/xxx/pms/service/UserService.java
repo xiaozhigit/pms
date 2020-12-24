@@ -76,4 +76,6 @@ public interface UserService {
      * @return 更新结果
      */
     int updateUserRoleIdByCompanyIdAndRoleId(Integer companyId, Integer roleId);
+
+    int  updateUserRoleIdByRoleId(Integer roleId);
 }
