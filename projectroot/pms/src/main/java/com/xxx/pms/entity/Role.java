@@ -36,8 +36,13 @@ public class Role {
     private Integer createId;
 
     /**
+     *  创建人昵称
+     */
+    private String createName;
+
+    /**
      *   创建时间
      */
-    private Date gmtCreate;
+    private String gmtCreate;
     
 }

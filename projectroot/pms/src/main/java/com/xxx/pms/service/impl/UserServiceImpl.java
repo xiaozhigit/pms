@@ -13,6 +13,7 @@ import com.xxx.pms.util.CommonUtils;
 import com.xxx.pms.util.JwtUtils;
 import com.xxx.pms.util.PinYinUtils;
 import com.xxx.pms.util.ResponseUtils;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -169,5 +170,22 @@ public class UserServiceImpl implements UserService {
         user.setStatue(statue);
         userMapper.updateByPrimaryKeySelective(user);
         return ResponseUtils.success();
+    }
+
+    @Override
+    public List<User> selectUsersByCompanyIdAndRoleId(Integer companyId, Integer roleId) {
+        Example example=new Example(User.class);
+        example.and().andEqualTo("companyId",companyId).andEqualTo("roleId",roleId);
+        return userMapper.selectByExample(example);
+    }
+
+    @Override
+    public int updateUserRoleIdByCompanyIdAndRoleId(Integer companyId, Integer roleId) {
+//        Example example =Example.builder(User.class).select("companyId",companyId).andEqualTo("roleId",roleId).build();
+//        Example.builder(User.class).where(s)
+//        Example example = new Example(User.class);
+//        Example.Criteria criteria=example.createCriteria().andEqualTo("roleId",roleId);
+//        user.setRoleId(null);
+        return userMapper.updateUserRoleIdByCompanyIdAndRoleId(companyId,roleId);
     }
 }
