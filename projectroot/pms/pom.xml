@@ -124,6 +124,13 @@
             <artifactId>jjwt</artifactId>
         </dependency>
 
+        <!--汉字获取拼音工具-->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
         <!-- 添加flyway依赖 -->
         <!--<dependency>
             <groupId>org.flywaydb</groupId>

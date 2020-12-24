@@ -6,13 +6,14 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.security.MD5Encoder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
 public class JwtUtils {
 
-    public static final int VALID_TIME=2*60*60*1000;//单位毫秒  目前设置是两个小时
+    public static final int VALID_TIME=1*60*60*1000;//单位毫秒  目前设置是一个小时
 
     // 设置签名加密方法
     public static final SignatureAlgorithm SIGNATURE_ALGORITHM = SignatureAlgorithm.HS256;
@@ -50,6 +51,28 @@ public class JwtUtils {
                 .setSigningKey(JwtUtils.SECRET)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public static int getUserIdByRequest(HttpServletRequest request) {
+        String authHeaders = request.getHeader("Authorization");
+        String token = authHeaders.replace("Bearer ","");
+        Claims claims = checkToken(token);
+        int userId = (int)claims.get("userId");
+        return userId;
+    }
+
+    public static int getCompanyIdByRequest(HttpServletRequest request) {
+        String authHeaders = request.getHeader("Authorization");
+        String token = authHeaders.replace("Bearer ","");
+        Claims claims = checkToken(token);
+        int companyId = (int)claims.get("companyId");
+        return companyId;
+    }
+
+    public static String getToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        token = token.substring(7,token.length());
+        return token;
     }
 
     /**

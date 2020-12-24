@@ -5,7 +5,6 @@ import com.xxx.pms.entity.*;
 import com.xxx.pms.mapper.*;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.service.MenuService;
-import com.xxx.pms.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -30,6 +29,9 @@ public class MenuServiceImpl implements MenuService {
 
     @Resource
     private CompanyMenuMapper companyMenuMapper;
+
+    @Resource
+    private UserMapper userMapper;
 
 
     @Override

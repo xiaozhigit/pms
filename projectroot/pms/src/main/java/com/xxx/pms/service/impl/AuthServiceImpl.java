@@ -3,7 +3,9 @@ package com.xxx.pms.service.impl;
 
 
 import com.xxx.pms.constant.AccessStateCodeConstant;
+import com.xxx.pms.entity.Company;
 import com.xxx.pms.entity.User;
+import com.xxx.pms.mapper.CompanyMapper;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.AuthService;
@@ -17,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CompanyMapper companyMapper;
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -49,26 +54,37 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setUsername(username);
         user = userMapper.selectOne(user);
-        // 根据用户信息生成token
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("companyId",user.getCompanyId());
-        claims.put("username",username);
-        String token = JwtUtils.generateToken(user.getId(),claims);
-        // 封装返回的数据  密码不返回
-        user.setPassword("");
-        Map<String,Object> data = new HashMap<>();
-        data.put("token",token);
-        data.put("user",user);
-        data.put("company","");
-        return ResponseUtils.successData(data);
+        Boolean userStatue = user.getStatue();
+        Company company = companyMapper.selectByPrimaryKey(user.getCompanyId());
+        Boolean companyStatue = company.getStatue();
+        //判断用户或公司是否被禁用
+        if(userStatue && companyStatue){
+            // 根据用户信息生成token
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("userId",user.getId());
+            claims.put("companyId",user.getCompanyId());
+            claims.put("username",username);
+            String token = JwtUtils.generateToken(user.getId()+"",claims);
+            // 封装返回的数据  密码不返回
+            user.setPassword("");
+            Map<String,Object> data = new HashMap<>();
+            data.put("token",token);
+            data.put("user",user);
+            data.put("company",company);
+            return ResponseUtils.successData(data);
+        }else {
+            //用户或公司被禁用无法登录成功
+            return ResponseUtils.fillState(new String[]{"200","用户或公司被禁用，无法登录"});
+        }
     }
 
     /**
      * 刷新token的接口
      * @return
+     * @param request
      */
-    // 刷新token的接口
-    public Response refreshToken(String token){
+    public Response refreshToken(HttpServletRequest request){
+        String token = JwtUtils.getToken(request);
         Claims claims;
         try {
             claims = JwtUtils.checkToken(token);
@@ -76,9 +92,13 @@ public class AuthServiceImpl implements AuthService {
             return ResponseUtils.fillState(AccessStateCodeConstant.TOKEN_ERROR);
         }
         User user = userMapper.selectByPrimaryKey(claims.getSubject());
+        claims.put("userId",user.getId());
         claims.put("companyId",user.getCompanyId());
-        String newToken = JwtUtils.generateToken(user.getId(),claims);
-        return ResponseUtils.successData(newToken);
+        claims.put("userName",user.getUsername());
+        Map<String,Object> data = new HashMap<>();
+        String newToken = JwtUtils.generateToken(user.getId()+"",claims);
+        data.put("newToken",newToken);
+        return ResponseUtils.successData(data);
     }
 
 }

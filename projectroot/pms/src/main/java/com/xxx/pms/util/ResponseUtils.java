@@ -53,6 +53,11 @@ public class ResponseUtils {
         return new Response(AccessStateCodeConstant.FAIL_CODE, null);
     }
 
+
+    public static <T> Response errorMessage(String[] info, T data) {
+        return new Response(info, data);
+    }
+
     /**
      * @Description: 填充服务器应答消息
      * @param info
