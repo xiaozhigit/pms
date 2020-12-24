@@ -41,6 +41,7 @@ mybatis:
 logging:
   level:
     root: info
+    com.xxx.pms.mapper: debug
   config: classpath:logback.xml
 #eureka:
 #  client:

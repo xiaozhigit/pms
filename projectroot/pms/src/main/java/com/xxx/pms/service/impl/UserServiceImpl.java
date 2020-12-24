@@ -1,68 +1,73 @@
 package com.xxx.pms.service.impl;
 
-
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-
+import com.xxx.pms.constant.YmlConstant;
 import com.xxx.pms.entity.User;
-import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.mapper.UserMapper;
+import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.UserService;
+import com.xxx.pms.util.CommonUtils;
+import com.xxx.pms.util.JwtUtils;
+import com.xxx.pms.util.PinYinUtils;
 import com.xxx.pms.util.ResponseUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     UserMapper userMapper;
 
-    /**
-     * 获取用户列表
-     * @param pageNo
-     * @param pageSize
-     * @return
-     */
-    @Override
-    public Page<User> findUserListByPage(Integer pageNo, Integer pageSize){
-        PageHelper.startPage(pageNo, pageSize);
-        return (Page<User>) userMapper.selectAll();
-    }
-
-    /**
-     * 根据用户名称查询用户信息
-     * @param username
-     * @return
-     */
-    @Override
-    public User findUserByUsername(String username){
-        User user = new User();
-        user.setUsername(username);
-        return userMapper.selectOne(user);
-    }
-
 
     /**
      * 增加用户
      * @param user
+     * @param request
      * @return
      */
     @Override
-    public Response addUser(User user) {
-        //随机生成id
-        user.setId("sss");
-        //对密码加密
-        String encodePassword = passwordEncoder.encode(user.getPassword());
+    public Response addUser(User user, HttpServletRequest request) {
+        //验证用户名(同手机号)是否存在
+        User checkUser = new User();
+        checkUser.setUsername(user.getPhone());
+        List<User> checkUserList = userMapper.select(checkUser);
+        if(checkUserList.size() > 0){
+            return ResponseUtils.errorMessage(new String[]{"200","用户名(手机号)已存在，请重新输入！"},null);
+        }
+        String name = user.getName();
+        String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(name);
+        user.setInitials(pinYinHeadChar);
+        String encodePassword = "";
+        String password = user.getPassword();
+        //如果没有设置密码就用默认密码
+        if(StringUtils.isEmpty(password)){
+            encodePassword = passwordEncoder.encode(YmlConstant.PASSWORD);
+        }else {
+            encodePassword = passwordEncoder.encode(password);
+        }
         user.setPassword(encodePassword);
-        userMapper.insert(user);
+        int companyId = JwtUtils.getCompanyIdByRequest(request);
+        user.setCompanyId(companyId);
+        //获取创建人的信息
+        int creatorUserId = JwtUtils.getUserIdByRequest(request);
+        User creatorUser = userMapper.selectByPrimaryKey(creatorUserId);
+
+        user.setCreateId(creatorUserId);
+        user.setCreateName(creatorUser.getName());
+        user.setUsername(user.getPhone());
+        userMapper.insertSelective(user);
         return ResponseUtils.success();
     }
 
@@ -73,6 +78,17 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Response updateUser(User user) {
+        //验证用户名(同手机号)是否存在
+        User checkUser = new User();
+        checkUser.setUsername(user.getPhone());
+        List<User> checkUserList = userMapper.select(checkUser);
+        if(checkUserList.size() > 0){
+            return ResponseUtils.errorMessage(new String[]{"200","用户名(手机号)已存在，请重新输入！"},null);
+        }
+        String name = user.getName();
+        String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(name);
+        user.setInitials(pinYinHeadChar);
+        user.setUsername(user.getPhone());
         userMapper.updateByPrimaryKeySelective(user);
         return ResponseUtils.success();
     }
@@ -83,7 +99,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response getUserById(String id) {
+    public Response getUserById(int id) {
         User user = userMapper.selectByPrimaryKey(id);
         return ResponseUtils.successData(user);
     }
@@ -94,7 +110,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response deleteUserById(String id) {
+    public Response deleteUserById(int id) {
         userMapper.deleteByPrimaryKey(id);
         return ResponseUtils.success();
     }
@@ -102,13 +118,56 @@ public class UserServiceImpl implements UserService {
     /**
      * 分页条件查询用户列表
      * @param form
+     * @param request
      * @return
      */
     @Override
-    public Response getUserListByPage(RequestParamPage<User> form) {
+    public Response getUserListByPage(RequestParamPage<User> form, HttpServletRequest request) {
         PageHelper.startPage(form.getPage(), form.getPageSize());
-        List<User> userList = userMapper.select(form.getParam());
+
+        User user = form.getParam();
+        int companyId = JwtUtils.getCompanyIdByRequest(request);
+        user.setCompanyId(companyId);
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("statue",true);
+        if(CommonUtils.isNotEmpty(user.getCompanyId())){
+            criteria.andEqualTo("companyId",user.getCompanyId());
+        }
+        if(CommonUtils.isNotEmpty(user.getName())){
+            criteria.andLike("name","%"+user.getName()+"%")
+                    .orLike("initials","%"+user.getName()+"%");
+        }
+        if(CommonUtils.isNotEmpty(user.getPhone())){
+            criteria.andLike("phone","%"+user.getPhone()+"%");
+        }
+        example.setOrderByClause("gmt_create desc");
+        List<User> userList = userMapper.selectByExample(example);
+
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         return ResponseUtils.successData(pageInfo);
+    }
+
+    @Override
+    public Response updatePassword(String oldPassword, String newPassword, HttpServletRequest request) {
+        int userId = JwtUtils.getUserIdByRequest(request);
+        User user = userMapper.selectByPrimaryKey(userId);
+        boolean flag = passwordEncoder.matches(oldPassword, user.getPassword());
+        if(flag){
+            String newPasswordEncoder = passwordEncoder.encode(newPassword);
+            user.setPassword(newPasswordEncoder);
+            userMapper.updateByPrimaryKeySelective(user);
+        }else {
+            return ResponseUtils.errorMessage(new String[]{"200","旧密码输入错误"},null);
+        }
+        return ResponseUtils.success();
+    }
+
+    @Override
+    public Response updateUserStatueById(int id, Boolean statue) {
+        User user = userMapper.selectByPrimaryKey(id);
+        user.setStatue(statue);
+        userMapper.updateByPrimaryKeySelective(user);
+        return ResponseUtils.success();
     }
 }

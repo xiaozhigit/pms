@@ -18,5 +18,8 @@ public class YmlConstant {
 
     @Value("${image.userLogoAccessPath}")
     private String userLogoAccessPath;
+
+    // 默认密码
+    public static String PASSWORD = "123456";
     
 }

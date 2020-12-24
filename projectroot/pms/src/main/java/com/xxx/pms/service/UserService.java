@@ -1,35 +1,20 @@
 package com.xxx.pms.service;
 
-
 import com.github.pagehelper.Page;
 import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface UserService {
-
-    /**
-     * 获取用户列表
-     * @param pageNo
-     * @param pageSize
-     * @return
-     */
-    Page<User> findUserListByPage(Integer pageNo, Integer pageSize);
-
-    /**
-     * 根据用户名称查询用户信息
-     * @param username
-     * @return
-     */
-    User findUserByUsername(String username);
-
-
     /**
      * 增加用户
      * @param user
+     * @param request
      * @return
      */
-    Response addUser(User user);
+    Response addUser(User user, HttpServletRequest request);
 
     /**
      * 修改用户
@@ -43,21 +28,25 @@ public interface UserService {
      * @param id
      * @return
      */
-    Response getUserById(String id);
+    Response getUserById(int id);
 
     /**
      * 删除用户
      * @param id
      * @return
      */
-    Response deleteUserById(String id);
+    Response deleteUserById(int id);
 
     /**
      * 分页条件查询用户列表
      * @param form
+     * @param request
      * @return
      */
-    Response getUserListByPage(RequestParamPage<User> form);
+    Response getUserListByPage(RequestParamPage<User> form, HttpServletRequest request);
 
 
+    Response updatePassword(String oldPassword, String newPassword, HttpServletRequest request);
+
+    Response updateUserStatueById(int id, Boolean statue);
 }

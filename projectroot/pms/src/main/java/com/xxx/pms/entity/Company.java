@@ -24,17 +24,12 @@ public class Company {
      */
     private String name;
 
-    /**
-     *   地址
-     *
-     */
-    private String address;
 
     /**
      *   联系方式
      *
      */
-    private String telPhone;
+    private String phone;
 
     /**
      *   公司logo头像
@@ -42,21 +37,10 @@ public class Company {
     private String logo;
 
     /**
-     *   邮箱
-     *
+     *   1正常0禁用
      */
-    private String email;
+    private Boolean statue;
 
-    /**
-     *   0正常 1为禁用  2为停用
-     */
-    private Boolean delFlag;
-
-    /**
-     *   创建时间
-     *
-     */
-    private Date createTime;
 
     /**
      *   管理员用户id
@@ -64,13 +48,4 @@ public class Company {
      */
     private String adminId;
 
-    /**
-     *   公司代码
-     */
-    private String code;
-
-    /**
-     *   公司当前编码
-     */
-    private String currentNumber;
 }

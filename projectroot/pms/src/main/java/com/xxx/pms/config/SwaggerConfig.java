@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo())
                 .groupName("groupName")
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.xxx.vcard")) // 指定扫描包路径
+                .apis(RequestHandlerSelectors.basePackage("com.xxx.pms")) // 指定扫描包路径
                 .paths(PathSelectors.any())
                 .build();
     }

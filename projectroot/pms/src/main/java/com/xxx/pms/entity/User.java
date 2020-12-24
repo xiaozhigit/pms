@@ -1,7 +1,12 @@
 package com.xxx.pms.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.omg.CORBA.INTERNAL;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
@@ -10,25 +15,27 @@ import java.util.Date;
 @Table(name = "sys_user")
 public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     /**
      *   公司ID
      */
-    private String companyId;
+    private Integer companyId;
 
-    /**
-     *   昵称/姓名
-     */
+    @ApiModelProperty(value = "昵称/姓名", name = "name", dataType = "String")
     private String name;
+
+
+    @ApiModelProperty(value = "昵称/姓名首字母", name = "initials", dataType = "String")
+    private String initials;
+
 
     /**
      *   手机号
      */
     private String phone;
 
-    /**
-     *   用户名
-     */
+    @ApiModelProperty(value = "用户名", name = "username", dataType = "String")
     private String username;
 
     /**
@@ -39,31 +46,27 @@ public class User {
     /**
      *   角色ID
      */
-    private String roleId;
+    private Integer roleId;
 
     /**
      *   创建人ID
      */
-    private String createId;
+    private Integer createId;
 
-    /**
-     *   头像
-     */
+    @ApiModelProperty(value = "创建人昵称", name = "createName", dataType = "String")
+    private String createName;
+
+    @ApiModelProperty(value = "头像", name = "image", dataType = "String")
     private String image;
 
-    /**
-     *   创建时间
-     */
+    @JsonFormat(
+            pattern = "yyyy-MM-dd HH:mm:ss",
+            timezone = "GMT+8"
+    )
+    @ApiModelProperty(value = "创建时间", name = "gmtCreate", dataType = "Date")
     private Date gmtCreate;
 
-    /**
-     *   更新时间
-     */
-    private Date gmtModified;
-
-    /**
-     *   1正常0禁用
-     */
+    @ApiModelProperty(value = "用户状态（true:正常,false:禁用）", name = "statue", dataType = "Boolean")
     private Boolean statue;
 
     /**
