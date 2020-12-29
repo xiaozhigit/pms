@@ -23,4 +23,15 @@ public interface UserMapper extends Mapper<User> {
     @Update("update sys_user set role_id=null where company_id=#{companyId} and role_id=#{roleId}")
     int updateUserRoleIdByCompanyIdAndRoleId(@Param("companyId") Integer companyId,@Param("roleId") Integer roleId);
 
+
+    @Select("select count(*) from sys_user where phone=#{phoneNumber}")
+    int selectByPhoneNumber(String phoneNumber);
+
+    /**
+     * 通过公司id查询管理员角色id
+     * @param companyId 公司id
+     * @return 管理员角色id
+     */
+    @Select("select role_id from sys_user where company_id=#{companyId} and id=(select admin_id from sys_company where id=#{companyId})")
+    Integer getAdminRoleIdByCompanyId(Integer companyId);
 }

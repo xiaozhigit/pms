@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -64,6 +65,14 @@ public class Menu {
      *   创建时间
      */
     private Date gmtCreate;
+    /**
+     * 是否收藏
+     */
+    @Transient
+    private Boolean isFavorite;
+
+    @Transient
+    private String  companyName;
 
 
 }

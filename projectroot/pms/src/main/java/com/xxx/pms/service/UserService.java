@@ -5,6 +5,7 @@ import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,6 +17,13 @@ public interface UserService {
      * @return
      */
     Response addUser(User user, HttpServletRequest request);
+
+    /**
+     * 新增用户
+     * @param user 用户对象
+     * @return 新增结果
+     */
+    Map addUser(User user);
 
     /**
      * 修改用户
@@ -64,6 +72,17 @@ public interface UserService {
      * @return 更新结果
      */
     int updateUserRoleIdByCompanyIdAndRoleId(Integer companyId, Integer roleId);
+    /**
+     * 查询用户手机号是否存在系统中
+     * @param phoneNumber 手机号
+     * @return 查询结果
+     */
+    Boolean phoneIsExist(String phoneNumber);
 
-    int  updateUserRoleIdByRoleId(Integer roleId);
+    /**
+     * 通过公司id查询公司管理员的角色id
+     * @return 公司管理员角色id
+     */
+    Integer getAdminRoleIdByCompanyId(Integer companyId);
+
 }

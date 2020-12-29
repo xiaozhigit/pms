@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.Role;
 import com.xxx.pms.entity.UserFavoriteMenu;
+import com.xxx.pms.po.MenuDto;
 import com.xxx.pms.po.RequestParamPage;
 
 import java.util.List;
@@ -25,9 +26,9 @@ public interface MenuService {
     /**
      * 通过用户id查询用户菜单
      * @param usrId 用户id
-     * @return 用户菜单集合
+     * @return 用户菜单集合树形
      */
-    List<Menu> selectMenusByUserId(Integer usrId);
+    List<MenuDto> selectMenusByUserId(Integer usrId);
 
 
     /**
@@ -36,14 +37,6 @@ public interface MenuService {
      * @return 用户收藏菜单集合
      */
     List<Menu> selectFavoriteMenusByUserId(Integer usrId);
-
-    /**
-     * 条件查询
-     * @param name 菜单名称
-     * @param description 菜单描述
-     * @return 菜单集合
-     */
-    List<Menu> selectByCondition(String name, String description);
 
     /**
      * 分页查询
@@ -58,4 +51,10 @@ public interface MenuService {
      * @return 收藏结果
      */
     int userFavoriteMenu(UserFavoriteMenu userFavoriteMenu);
+
+    /**
+     * 查询所有菜单，菜单中包含公司名称
+     * @return 菜单集合
+     */
+    List<Menu> getAllMenusContainCompanyName();
 }

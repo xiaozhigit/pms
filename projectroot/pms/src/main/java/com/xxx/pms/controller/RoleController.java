@@ -2,7 +2,9 @@ package com.xxx.pms.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.xxx.pms.constant.AccessStateCodeConstant;
+import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.Role;
+import com.xxx.pms.entity.RoleMenu;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.RoleService;
@@ -14,6 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @Api(tags={"角色管理"})
@@ -61,6 +64,34 @@ public class RoleController {
     @PostMapping("getRoleByPage")
     public Response getRoleByPage(@RequestBody  RequestParamPage<Role> paramPage) {
         PageInfo<Role> result = roleService.selectByPage(paramPage);
+        return ResponseUtils.successData(result);
+    }
+
+
+    @ApiOperation(value = "角色添加菜单", notes = "角色添加菜单接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="roleId",value="角色Id",dataType="Integer",required=true)
+    })
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("roleAddMenu")
+    public Response roleAddMenu(Integer roleId,@RequestBody List<Integer> menuIds) {
+        int result = roleService.roleAddMenus(roleId,menuIds);
+        return result>0? ResponseUtils.success():ResponseUtils.error();
+    }
+
+    @ApiOperation(value = "角色删除菜单", notes = "角色删除菜单接口")
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("roleDeleteMenu")
+    public Response roleDeleteMenu(@RequestBody RoleMenu roleMenu) {
+        int result = roleService.roleDeleteMenu(roleMenu);
+        return result>0? ResponseUtils.success():ResponseUtils.error();
+    }
+
+    @ApiOperation(value = "获取角色菜单", notes = "获取角色菜单接口")
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("getRoleMenu")
+    public Response getRoleMenu(String roleId) {
+        List<Menu> result = roleService.getRoleMenu(roleId);
         return ResponseUtils.successData(result);
     }
 

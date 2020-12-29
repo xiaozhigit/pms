@@ -2,6 +2,7 @@ package com.xxx.pms.controller;
 
 import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.UserFavoriteMenu;
+import com.xxx.pms.po.MenuDto;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.MenuService;
 import com.xxx.pms.util.ResponseUtils;
@@ -63,6 +64,14 @@ public class MenuController {
         return  ResponseUtils.successData(result);
     }
 
+    @ApiOperation(value = "查询所有菜单-菜单中显示所属公司", notes="查询所有菜单接口")
+    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
+    @PostMapping("getAllMenusContainCompanyName")
+    public Response getAllMenusContainCompanyName(){
+        List<Menu> result= menuService.getAllMenusContainCompanyName();
+        return  ResponseUtils.successData(result);
+    }
+
     @ApiOperation(value = "根据用户id查询用户所有菜单", notes="根据用户id查询用户所有菜单接口")
     @ApiImplicitParams({
             @ApiImplicitParam(name="userId",value="用户id",dataType="Integer",required=true)
@@ -70,7 +79,7 @@ public class MenuController {
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
     @PostMapping("getMenusByUserId")
     public Response getMenusByUserId(Integer userId){
-        List<Menu> result= menuService.selectMenusByUserId(userId);
+        List<MenuDto> result= menuService.selectMenusByUserId(userId);
         return  ResponseUtils.successData(result);
     }
 

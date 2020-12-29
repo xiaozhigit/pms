@@ -2,8 +2,11 @@ package com.xxx.pms.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.Role;
+import com.xxx.pms.entity.RoleMenu;
 import com.xxx.pms.mapper.RoleMapper;
+import com.xxx.pms.mapper.RoleMenuMapper;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.service.RoleService;
 import com.xxx.pms.service.UserService;
@@ -21,6 +24,9 @@ public class RoleServiceImpl implements RoleService {
     @Resource
     private UserService userService;
 
+    @Resource
+    private RoleMenuMapper roleMenuMapper;
+
     @Override
     public int add(Role role) {
         return roleMapper.insert(role);
@@ -30,9 +36,10 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public int deleteById(Integer id) {
         Role role=selectById(id);
-        roleMapper.deleteByPrimaryKey(id);
-        return userService.
+        userService.
                 updateUserRoleIdByCompanyIdAndRoleId(role.getCompanyId(),role.getId());
+        return roleMapper.deleteByPrimaryKey(id);
+
     }
 
     @Override
@@ -62,5 +69,36 @@ public class RoleServiceImpl implements RoleService {
     public PageInfo<Role> selectByPage(RequestParamPage<Role> parameter) {
         PageHelper.startPage(parameter.getPage(),parameter.getPageSize());
         return new PageInfo<>(roleMapper.select(parameter.getParam()));
+    }
+
+    @Override
+    public int roleAddMenu(RoleMenu roleMenu) {
+        return roleMenuMapper.insert(roleMenu);
+    }
+
+    @Override
+    public int roleDeleteMenu(RoleMenu roleMenu) {
+        return roleMenuMapper.deleteByRoleIdAndMenuId(roleMenu);
+    }
+
+    @Override
+    public List<Menu> getRoleMenu(String roleId) {
+        return roleMenuMapper.selectRoleMenuByRoleId(roleId);
+    }
+
+    @Override
+    public int roleAddMenus(Integer roleId,List<Integer> menuIds) {
+        for (Integer menuId: menuIds) {
+            RoleMenu roleMenu=new RoleMenu();
+            roleMenu.setRoleId(roleId);
+            roleMenu.setMenuId(menuId);
+            roleMenuMapper.insert(roleMenu);
+        }
+        return 1;
+    }
+
+    @Override
+    public List<Role> getCompanyRoles(Integer companyId) {
+        return roleMapper.getCompanyRoles(companyId);
     }
 }

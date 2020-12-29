@@ -20,15 +20,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
+
+    @Resource
     PasswordEncoder passwordEncoder;
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
 
@@ -70,6 +74,34 @@ public class UserServiceImpl implements UserService {
         user.setUsername(user.getPhone());
         userMapper.insertSelective(user);
         return ResponseUtils.success();
+    }
+
+
+    public Map addUser(User user) {
+        Map returnMap=new HashMap<String,Object>();
+        returnMap.put("code",200);
+        //验证用户名(同手机号)是否存在
+        if(phoneIsExist(user.getPhone())){
+            returnMap.put("code",400);
+            returnMap.put("msg","手机号已存在，请重新输入");
+        }
+        String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(user.getName());
+        user.setInitials(pinYinHeadChar);
+        String encodePassword = "";
+        String password = user.getPassword();
+        //如果没有设置密码就用默认密码
+        if(StringUtils.isEmpty(password)){
+            encodePassword = passwordEncoder.encode(YmlConstant.PASSWORD);
+        }else {
+            encodePassword = passwordEncoder.encode(password);
+        }
+        user.setPassword(encodePassword);
+        user.setUsername(user.getPhone());
+        user.setStatue(true);
+        user.setDelFlag(false);
+        userMapper.insertSelective(user);
+        returnMap.put("msg",user.getId());
+        return returnMap;
     }
 
     /**
@@ -181,16 +213,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int updateUserRoleIdByCompanyIdAndRoleId(Integer companyId, Integer roleId) {
-//        Example example =Example.builder(User.class).select("companyId",companyId).andEqualTo("roleId",roleId).build();
-//        Example.builder(User.class).where(s)
-//        Example example = new Example(User.class);
-//        Example.Criteria criteria=example.createCriteria().andEqualTo("roleId",roleId);
-//        user.setRoleId(null);
         return userMapper.updateUserRoleIdByCompanyIdAndRoleId(companyId,roleId);
     }
 
+
+    public Boolean phoneIsExist(String phoneNumber){
+        return userMapper.selectByPhoneNumber(phoneNumber)>0;
+    };
+
     @Override
-    public int updateUserRoleIdByRoleId(Integer roleId) {
-        return userMapper.updateUserRoleIdByRoleId(roleId);
+    public Integer getAdminRoleIdByCompanyId(Integer companyId) {
+        return userMapper.getAdminRoleIdByCompanyId(companyId);
     }
 }

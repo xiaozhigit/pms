@@ -1,5 +1,6 @@
 package com.xxx.pms.mapper;
 
+import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.RoleMenu;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Select;
@@ -17,7 +18,7 @@ public interface RoleMenuMapper extends Mapper<RoleMenu> {
      * @return
      */
     @Select("select menu_id from  sys_role_menu where role_id=#{roleId}")
-    List<Integer> selectRoleMenuByRoleId(Integer roleId);
+    List<Integer> selectRoleMenuIdByRoleId(Integer roleId);
 
     /**
      * 通过菜单id删除数据
@@ -25,4 +26,16 @@ public interface RoleMenuMapper extends Mapper<RoleMenu> {
      */
     @Delete("delete  from sys_role_menu where menu_id=#{menuId}")
     int deleteByMenuId(Integer menuId);
+
+    /**
+     * 通过角色id和菜单id删除数据
+     * @param roleMenu 角色菜单实体类
+     * @return 删除结果
+     */
+    @Delete("delete  from sys_role_menu where role_id=#{roleId} and menu_id=#{menuId}")
+    int deleteByRoleIdAndMenuId(RoleMenu roleMenu);
+
+
+    @Select("select * from sys_menu where id in (select menu_id from  sys_role_menu where role_id=#{roleId})")
+    List<Menu> selectRoleMenuByRoleId(String roleId);
 }

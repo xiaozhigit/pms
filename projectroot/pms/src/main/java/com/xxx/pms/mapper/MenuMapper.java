@@ -31,4 +31,10 @@ public interface MenuMapper extends Mapper<Menu> {
     @Select("select * from sys_menu where id in(select menu_id from sys_user_favorite_menu where user_id=#{userId})")
     List<Menu> queryFavoriteMenusByUserId(Integer userId);
 
+    /**
+     * 查询所有菜单
+     * @return
+     */
+    @Select("SELECT sm.*,sc.NAME as companyName  FROM sys_menu sm,sys_company_menu scm,sys_company sc WHERE scm.menu_id=sm.id AND scm.company_id=sc.id")
+    List<Menu> selectAllByOrder();
 }
