@@ -25,22 +25,26 @@ spring:
 #    add-mappings: false
     #static-locations: classpath:classpath:/static/,classpath:/image/,classpath:/resources/
   datasource:
-    url: jdbc:mysql://47.108.113.224:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+#    url: jdbc:mysql://47.108.113.224:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+#    username: root
+#    password: xxxkj123!@#
+    url: jdbc:mysql://192.168.2.10:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
     username: root
-    password: xxxkj123!@#
+    password: cdxxx2019
 
 mybatis:
   #config-location: classpath:mybatis-config.xml
   mapper-locations: classpath*:mapping/*.xml
   type-aliases-package: com.xxx.pms.entity
-   #进行自动映射时，数据以下划线命名，如数据库返回的"order_address"命名字段是否映射为class的"orderAddress"字段。默认为false
-  map-underscore-to-camel-case: true
-  #设置在控制台打印sql
-#  configuration:
+  configuration:
+    #进行自动映射时，数据以下划线命名，如数据库返回的"order_address"命名字段是否映射为class的"orderAddress"字段。默认为false
+    map-underscore-to-camel-case: true
+    #设置在控制台打印sql
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 logging:
   level:
     root: info
+    com.xxx.pms.mapper: debug
   config: classpath:logback.xml
 #eureka:
 #  client:
