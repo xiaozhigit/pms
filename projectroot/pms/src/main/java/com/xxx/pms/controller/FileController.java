@@ -1,11 +1,9 @@
 package com.xxx.pms.controller;
 
 
-import com.xxx.pms.constant.YmlConstant;
 import com.xxx.pms.entity.SysFile;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.FileService;
-import com.xxx.pms.util.CommonUtils;
 import com.xxx.pms.util.JwtUtils;
 import com.xxx.pms.util.ResponseUtils;
 import io.swagger.annotations.Api;
