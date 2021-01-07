@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +28,11 @@ import java.util.Map;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
-    @Autowired
+    @Resource
     private CompanyMapper companyMapper;
-    @Autowired
+    @Resource
     AuthenticationManager authenticationManager;
 
     /**

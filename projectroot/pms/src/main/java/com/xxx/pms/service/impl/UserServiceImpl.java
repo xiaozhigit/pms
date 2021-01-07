@@ -72,6 +72,7 @@ public class UserServiceImpl implements UserService {
         user.setCreateId(creatorUserId);
         user.setCreateName(creatorUser.getName());
         user.setUsername(user.getPhone());
+        user.setStatue(true);
         userMapper.insertSelective(user);
         return ResponseUtils.success();
     }
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService {
         User checkUser = new User();
         checkUser.setUsername(user.getPhone());
         List<User> checkUserList = userMapper.select(checkUser);
-        if(checkUserList.size() > 0){
+        if(checkUserList.size() >1){
             return ResponseUtils.errorMessage(new String[]{"200","用户名(手机号)已存在，请重新输入！"},null);
         }
         String name = user.getName();
@@ -163,7 +164,6 @@ public class UserServiceImpl implements UserService {
         user.setCompanyId(companyId);
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("statue",true);
         if(CommonUtils.isNotEmpty(user.getCompanyId())){
             criteria.andEqualTo("companyId",user.getCompanyId());
         }
@@ -173,6 +173,10 @@ public class UserServiceImpl implements UserService {
         }
         if(CommonUtils.isNotEmpty(user.getPhone())){
             criteria.andLike("phone","%"+user.getPhone()+"%");
+        }
+
+        if(CommonUtils.isNotEmpty(user.getRoleId())){
+            criteria.andEqualTo("roleId",user.getRoleId());
         }
         example.setOrderByClause("gmt_create desc");
         List<User> userList = userMapper.selectByExample(example);

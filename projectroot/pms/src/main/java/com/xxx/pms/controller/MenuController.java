@@ -94,7 +94,7 @@ public class MenuController {
         return  ResponseUtils.successData(result);
     }
 
-    @ApiOperation(value = "用户收藏菜单", notes="用户收藏菜单接口")
+    @ApiOperation(value = "用户收藏或者取消收藏菜单", notes="用户收藏或者取消收藏菜单接口")
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="String", required=true)
     @PostMapping("userFavoriteMenu")
     public Response userFavoriteMenu(@RequestBody UserFavoriteMenu userFavoriteMenu){

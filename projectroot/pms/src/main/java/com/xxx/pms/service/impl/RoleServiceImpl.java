@@ -88,9 +88,10 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public int roleAddMenus(Integer roleId,List<Integer> menuIds) {
+        RoleMenu roleMenu=new RoleMenu();
+        roleMenu.setRoleId(roleId);
+        roleMenuMapper.delete(roleMenu);
         for (Integer menuId: menuIds) {
-            RoleMenu roleMenu=new RoleMenu();
-            roleMenu.setRoleId(roleId);
             roleMenu.setMenuId(menuId);
             roleMenuMapper.insert(roleMenu);
         }

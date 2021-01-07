@@ -103,7 +103,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public int userFavoriteMenu(UserFavoriteMenu userFavoriteMenu) {
-        return userFavoriteMenuMapper.insert(userFavoriteMenu);
+        return userFavoriteMenu.getIsFavorite()?userFavoriteMenuMapper.insert(userFavoriteMenu):userFavoriteMenuMapper.delete(userFavoriteMenu);
     }
 
     @Override

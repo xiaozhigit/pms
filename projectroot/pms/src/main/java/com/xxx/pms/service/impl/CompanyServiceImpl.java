@@ -126,9 +126,10 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public int addCompanyMenus(Integer companyId, List<Integer> menuIds) {
+        CompanyMenu companyMenu=new CompanyMenu();
+        companyMenu.setCompanyId(companyId);
+        companyMenuMapper.delete(companyMenu);
         for (Integer menuId:menuIds) {
-            CompanyMenu companyMenu=new CompanyMenu();
-            companyMenu.setCompanyId(companyId);
             companyMenu.setMenuId(menuId);
             companyMenuMapper.insert(companyMenu);
         }

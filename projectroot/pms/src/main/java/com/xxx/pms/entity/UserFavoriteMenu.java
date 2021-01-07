@@ -1,9 +1,11 @@
 package com.xxx.pms.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -43,5 +45,11 @@ public class UserFavoriteMenu {
      *   排序
      */
     private Integer sort;
+
+
+    @ApiModelProperty(value = "收藏：true,取消收藏：false")
+    @Transient
+    private Boolean  isFavorite;
+
     
 }
