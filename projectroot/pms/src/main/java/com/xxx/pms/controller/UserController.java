@@ -9,9 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /***
@@ -25,9 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("user")
 public class UserController {
 
-    @Autowired
+    @Resource
     AuthService authService;
-    @Autowired
+    @Resource
     UserService userService;
 
     @ApiOperation(value = "增加用户", notes = "增加用户")

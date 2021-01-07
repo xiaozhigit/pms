@@ -12,15 +12,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * (SysFile)控制层
@@ -35,185 +33,67 @@ public class FileController {
     /**
      * 服务对象
      */
-    @Autowired
+    @Resource
     private FileService fileService;
 
-    @Value("${file.path}")
-    private String filePath;
-
-
     @PostMapping("/upload")
-    @ResponseBody
     @ApiOperation(value = "单文件上传")
-    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    public Response handleFileUpload(@RequestParam("file")MultipartFile file, HttpServletRequest request){
-        SysFile sysFile = new SysFile();
-        SysFile newFile = null;
-        if(!file.isEmpty()){
-            try {
-                System.out.println(filePath);
-                String filename = file.getOriginalFilename();
-                String suffix = filename.substring(filename.lastIndexOf(".") + 1);
-                String iconname =  JwtUtils.getCompanyIdByRequest(request)+ "/" +filename;
-
-				File f = new File(filePath);
-				if (!f.exists()) {
-					f.mkdir();
-				}
-                File fc = new File(filePath+JwtUtils.getCompanyIdByRequest(request));
-                if (!fc.exists()) {
-                    fc.mkdir();
-                }
-                sysFile.setId(CommonUtils.getUuid());
-                sysFile.setName(filename);
-                sysFile.setUrl(YmlConstant.IMG_PATH+iconname);
-                sysFile.setType(suffix);
-                sysFile.setSize(file.getSize()+"");
-                newFile = fileService.insert(sysFile);
-                File f1 = new File(filePath + iconname);
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f1));
-                out.write(file.getBytes());
-                out.flush();
-                out.close();
-            }catch(FileNotFoundException e) {
-                e.printStackTrace();
-                return ResponseUtils.errorMessage(new String[]{"500","未发现指定文件"},null);
-            }catch (IOException e) {
-                e.printStackTrace();
-                return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
+    public Response handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        if (!file.isEmpty()) {
+            Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+            if ((int) result.get("code") == 200) {
+                return ResponseUtils.successData(result.get("msg"));
             }
-
-            return ResponseUtils.successData(newFile);
-
-        }else{
-            return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+            return ResponseUtils.errorMessage(new String[]{"500", (String) result.get("msg")}, null);
         }
+        return ResponseUtils.errorMessage(new String[]{"500", "上传文件不能为空"}, null);
     }
 
 
     @PostMapping("/txUpload")
-    @ResponseBody
     @ApiOperation(value = "头像上传")
-    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    public Response txUpload(@RequestParam("file")MultipartFile file, HttpServletRequest request){
-
-        SysFile sysFile = new SysFile();
-        SysFile newFile = null;
-        if(!file.isEmpty()){
-            try {
-                String filename = file.getOriginalFilename();
-                String suffix = filename.substring(filename.lastIndexOf(".") + 1);
-                String iconname =  JwtUtils.getCompanyIdByRequest(request)+ "/tx/" +filename;
-
-                File f = new File(filePath);
-                if (!f.exists()) {
-                    f.mkdir();
-                }
-                File fc = new File(filePath+JwtUtils.getCompanyIdByRequest(request));
-                if (!fc.exists()) {
-                    fc.mkdir();
-                }
-                File fct = new File(filePath+JwtUtils.getCompanyIdByRequest(request)+"/tx");
-                if (!fct.exists()) {
-                    fct.mkdir();
-                }
-                sysFile.setId(CommonUtils.getUuid());
-                sysFile.setName(filename);
-                sysFile.setUrl(YmlConstant.IMG_PATH+iconname);
-                sysFile.setSize(file.getSize()+"");
-                sysFile.setType(suffix);
-                newFile = fileService.insert(sysFile);
-                File f1 = new File(filePath  + iconname);
-                BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f1));
-                out.write(file.getBytes());
-                out.flush();
-                out.close();
-                if (newFile != null) {
-                    return ResponseUtils.successData(newFile);
-                } else {
-                    return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
-                }
-            }catch(FileNotFoundException e) {
-                e.printStackTrace();
-                return ResponseUtils.errorMessage(new String[]{"500","未发现指定文件"},null);
-            }catch (IOException e) {
-                e.printStackTrace();
-                return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
+    public Response txUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        if (!file.isEmpty()) {
+            Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+            if ((int) result.get("code") == 200) {
+                return ResponseUtils.successData(result.get("msg"));
             }
-
-        }else{
-            return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+            return ResponseUtils.errorMessage(new String[]{"500", (String) result.get("msg")}, null);
         }
+        return ResponseUtils.errorMessage(new String[]{"500", "上传文件不能为空"}, null);
     }
 
 
-    @ResponseBody
     @PostMapping(value = "/batchUpload")
     @ApiOperation(value = "批量文件上传")
-    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
-    public Response batchUpload(@RequestParam(value = "file") MultipartFile[] file, HttpServletRequest request) {
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
+    public Response batchUpload(@RequestParam(value = "file") MultipartFile[] files, HttpServletRequest request) {
         try {
-            System.out.println("上传数组图片的长度是"+file.length);
             List<SysFile> list = new ArrayList<>();
-            String ls= "";
-            if (file.length!=0){
-                for (int i = 0; i < file.length; i++) {
-                    /**
-                     * 必须进行判断，否则数组会越界
-                     */
-                    MultipartFile files = file[i];
-                    if (files.isEmpty()){
-                        return ResponseUtils.errorMessage(new String[]{"500","未发现指定文件"},null);
+            if (files.length != 0) {
+                for (MultipartFile file : files) {
+                    if (file.isEmpty()) {
+                        return ResponseUtils.errorMessage(new String[]{"500", "未发现指定文件"}, null);
                     }
-                    //文件原始名字
-                    String filename = file[i].getOriginalFilename();
-                    String suffix = filename.substring(filename.lastIndexOf(".") + 1);
-                    String iconname =  JwtUtils.getCompanyIdByRequest(request)+ "/" +filename;
-                    File f = new File(filePath);
-                    if (!f.exists()) {
-                        f.mkdir();
+                    Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+                    if ((int) result.get("code") == 500) {
+                        return ResponseUtils.fillState(new String[]{"500", (String) result.get("msg")});
                     }
-                    File fc = new File(filePath+JwtUtils.getCompanyIdByRequest(request));
-                    if (!fc.exists()) {
-                        fc.mkdir();
-                    }
-                    SysFile sysFile = new SysFile();
-                    sysFile.setId(CommonUtils.getUuid());
-                    sysFile.setName(filename);
-                    sysFile.setUrl(YmlConstant.IMG_PATH+iconname);
-                    sysFile.setSize(file[i].getSize()+"");
-                    sysFile.setType(suffix);
-                    SysFile newFile = fileService.insert(sysFile);
-                    list.add(newFile);
-                    File f1 = new File(filePath +iconname);
-                    if(!f1.exists()){
-                        //先得到文件的上级目录，并创建上级目录，在创建文件
-                        f1.getParentFile().mkdir();
-                        try {
-                            //创建文件
-                            f1.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f1));
-                    out.write(file[i].getBytes());
-                    out.flush();
-                    out.close();
+                    list.add((SysFile) result.get("msg"));
                 }
                 return ResponseUtils.successData(list);
             }
-            return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+            return ResponseUtils.fillState(new String[]{"500", "文件集合为空"});
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.errorMessage(new String[]{"500","上传失败"},null);
+            return ResponseUtils.fillState(new String[]{"500", "上传失败"});
         }
     }
 
 
-    /**
-     * 删除文件
-     */
+
     @ApiOperation(value = "删除文件", notes = "删除文件")
     @ApiImplicitParams({
             @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
@@ -225,9 +105,7 @@ public class FileController {
     }
 
 
-    /**
-     * 根据id查找文件
-     */
+
     @ApiOperation(value = "根据id查找文件", notes = "根据id查找文件")
     @ApiImplicitParams({
             @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),

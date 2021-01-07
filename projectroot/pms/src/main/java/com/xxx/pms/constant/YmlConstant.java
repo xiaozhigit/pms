@@ -7,6 +7,13 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class YmlConstant {
+
+    // 默认密码
+    public static String PASSWORD = "123456";
+
+    // 文件地址映射路径
+    public static String IMG_PATH = "/static/";
+
     @Value("${image.companyLogoAccessPath}")
     private String companyLogoAccessPath;
 
@@ -19,10 +26,12 @@ public class YmlConstant {
     @Value("${image.userLogoAccessPath}")
     private String userLogoAccessPath;
 
-    // 默认密码
-    public static String PASSWORD = "123456";
+    @Value("${file.userFileAccessPath}")
+    private String userFileAccessPath;
 
-    // 文件地址映射路径
-    public static String IMG_PATH = "/static/";
+    @Value("${file.userFileLocationPath}")
+    private String userFileLocationPath;
+
+
 
 }
