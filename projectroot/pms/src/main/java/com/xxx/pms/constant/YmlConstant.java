@@ -29,6 +29,9 @@ public class YmlConstant {
     @Value("${file.userFileAccessPath}")
     private String userFileAccessPath;
 
+    @Value("${file.userFileBasePath}")
+    private String userFileBasePath;
+
     @Value("${file.userFileLocationPath}")
     private String userFileLocationPath;
 

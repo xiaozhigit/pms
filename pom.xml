@@ -7,9 +7,9 @@
     <artifactId>projectroot</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>vcard</module>
-    </modules>
+<!--    <modules>-->
+<!--        <module>vcard</module>-->
+<!--    </modules>-->
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

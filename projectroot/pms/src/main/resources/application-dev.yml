@@ -76,9 +76,11 @@ image:
   userLogoLocationPath: file:D:/images/userLogo/
   
 file:
-  userFileAccessPath: /**
+  userFileAccessPath: /static/**
 #  本地图片存储地址
-  userFileLocationPath: f:/upload/pms/
+  userFileBasePath : F:/upload/pms/
+  #文件本地映射地址
+  userFileLocationPath: file:F:/upload/pms/
 
 #  linux文件存储地址
 #  path: /data/pms/

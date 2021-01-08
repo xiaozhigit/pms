@@ -20,8 +20,8 @@ import java.util.Map;
 public class FileServiceImpl implements FileService {
     @Resource
     private FileMapper fileMapper;
-
-
+    @Resource
+    private YmlConstant ymlConstant;
 
 
     @Override
@@ -46,17 +46,17 @@ public class FileServiceImpl implements FileService {
     public Map<String, Object> uploadFile(MultipartFile file, int userId) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         resultMap.put("code", 200);
-        YmlConstant ymlConstant = new YmlConstant();
         String filename = file.getOriginalFilename();
         assert filename != null;
         String suffix = filename.substring(filename.lastIndexOf(".") + 1);
-        String fileSavePath = userId + filename;
-        String fileBasePath = ymlConstant.getUserFileLocationPath();
+        String pathSeparator="/";
+        String fileSavePath = userId +pathSeparator+filename;
+        String fileBasePath = ymlConstant.getUserFileBasePath();
         File f = new File(fileBasePath);
         if (!f.exists()) {
             f.mkdir();
         }
-        File fc = new File(fileBasePath +File.pathSeparator+ userId);
+        File fc = new File(fileBasePath+pathSeparator+userId);
         if (!fc.exists()) {
             fc.mkdir();
         }
@@ -67,7 +67,7 @@ public class FileServiceImpl implements FileService {
         sysFile.setSize(file.getSize() + "");
         sysFile.setType(suffix);
         newFile = this.insert(sysFile);
-        File f1 = new File(fileBasePath +File.pathSeparator+userId, filename);
+        File f1 = new File(fileBasePath +pathSeparator+userId, filename);
         resultMap.put("msg", newFile);
         try {
             file.transferTo(f1);
