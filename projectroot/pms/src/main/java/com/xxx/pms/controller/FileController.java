@@ -36,10 +36,13 @@ public class FileController {
 
     @PostMapping("/upload")
     @ApiOperation(value = "单文件上传")
-    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
-    public Response handleFileUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "int", required=true)
+    })
+    public Response handleFileUpload(@RequestParam("file") MultipartFile file, int userId) {
         if (!file.isEmpty()) {
-            Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+            Map<String, Object> result = fileService.uploadFile(file, userId);
             if ((int) result.get("code") == 200) {
                 return ResponseUtils.successData(result.get("msg"));
             }
@@ -51,10 +54,13 @@ public class FileController {
 
     @PostMapping("/txUpload")
     @ApiOperation(value = "头像上传")
-    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
-    public Response txUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "int", required=true)
+    })
+    public Response txUpload(@RequestParam("file") MultipartFile file, int userId) {
         if (!file.isEmpty()) {
-            Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+            Map<String, Object> result = fileService.uploadFile(file, userId);
             if ((int) result.get("code") == 200) {
                 return ResponseUtils.successData(result.get("msg"));
             }
@@ -66,8 +72,11 @@ public class FileController {
 
     @PostMapping(value = "/batchUpload")
     @ApiOperation(value = "批量文件上传")
-    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "string", required = true)
-    public Response batchUpload(@RequestParam(value = "file") MultipartFile[] files, HttpServletRequest request) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "int", required=true)
+    })
+    public Response batchUpload(@RequestParam(value = "file") MultipartFile[] files, int userId) {
         try {
             List<SysFile> list = new ArrayList<>();
             if (files.length != 0) {
@@ -75,7 +84,7 @@ public class FileController {
                     if (file.isEmpty()) {
                         return ResponseUtils.errorMessage(new String[]{"500", "未发现指定文件"}, null);
                     }
-                    Map<String, Object> result = fileService.uploadFile(file, JwtUtils.getUserIdByRequest(request));
+                    Map<String, Object> result = fileService.uploadFile(file, userId);
                     if ((int) result.get("code") == 500) {
                         return ResponseUtils.fillState(new String[]{"500", (String) result.get("msg")});
                     }

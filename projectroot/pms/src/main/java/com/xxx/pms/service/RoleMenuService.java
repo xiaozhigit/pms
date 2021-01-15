@@ -10,4 +10,6 @@ public interface RoleMenuService {
     int add(RoleMenu roleMenu);
 
     int deleteByRoleIdAndMenuId(RoleMenu roleMenu);
+
+    int delete(RoleMenu roleMenu);
 }

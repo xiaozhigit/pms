@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 
 @Configuration
@@ -31,16 +32,16 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Qualifier("myUserDetailsService")
-    @Autowired
+    @Resource
     private UserDetailsService userDetailsService;
 
-    @Autowired
+    @Resource
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
+    @Resource
     private UnauthorizedHandler unauthorizedHandler;
 
-    @Autowired
+    @Resource
     private RestAccessDeniedHandler accessDeniedHandler;
 
     @Override
@@ -56,6 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers( "/doc.html").permitAll()//"/sign", "/error/**","/swagger-resources","/v2/api-docs",
                 .antMatchers("/auth/login","/swaggerTest").permitAll()///auth/login
                 .antMatchers("/static/**").permitAll()
+                .antMatchers("/websocket/**").permitAll()
 //                .antMatchers("/admin/**").hasAnyRole("ADMIN") //admin开头的请求，需要admin权限
 //                .antMatchers("/article/**").hasRole("USER") //需登陆才能访问的url
 //                .antMatchers("/logout").authenticated()

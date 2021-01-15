@@ -53,21 +53,21 @@ public class JwtUtils {
                 .getBody();
     }
 
-    public static int getUserIdByRequest(HttpServletRequest request) {
+/*    public static int getUserIdByRequest(HttpServletRequest request) {
         String authHeaders = request.getHeader("Authorization");
         String token = authHeaders.replace("Bearer ","");
         Claims claims = checkToken(token);
         int userId = (int)claims.get("userId");
         return userId;
-    }
+    }*/
 
-    public static int getCompanyIdByRequest(HttpServletRequest request) {
+/*    public static int getCompanyIdByRequest(HttpServletRequest request) {
         String authHeaders = request.getHeader("Authorization");
         String token = authHeaders.replace("Bearer ","");
         Claims claims = checkToken(token);
         int companyId = (int)claims.get("companyId");
         return companyId;
-    }
+    }*/
 
     public static String getToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");

@@ -102,4 +102,9 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> getCompanyRoles(Integer companyId) {
         return roleMapper.getCompanyRoles(companyId);
     }
+
+    @Override
+    public Role getCompanyAdminRole(Integer companyId) {
+        return roleMapper.getCompanyAdminRole(companyId);
+    }
 }

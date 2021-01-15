@@ -1,6 +1,5 @@
 package com.xxx.pms.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xxx.pms.constant.YmlConstant;
@@ -10,18 +9,14 @@ import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.UserService;
 import com.xxx.pms.util.CommonUtils;
-import com.xxx.pms.util.JwtUtils;
 import com.xxx.pms.util.PinYinUtils;
 import com.xxx.pms.util.ResponseUtils;
-import org.apache.ibatis.session.RowBounds;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,11 +34,10 @@ public class UserServiceImpl implements UserService {
     /**
      * 增加用户
      * @param user
-     * @param request
      * @return
      */
     @Override
-    public Response addUser(User user, HttpServletRequest request) {
+    public Response addUser(User user, int companyId ,int createId) {
         //验证用户名(同手机号)是否存在
         User checkUser = new User();
         checkUser.setUsername(user.getPhone());
@@ -63,10 +57,9 @@ public class UserServiceImpl implements UserService {
             encodePassword = passwordEncoder.encode(password);
         }
         user.setPassword(encodePassword);
-        int companyId = JwtUtils.getCompanyIdByRequest(request);
         user.setCompanyId(companyId);
         //获取创建人的信息
-        int creatorUserId = JwtUtils.getUserIdByRequest(request);
+        int creatorUserId = createId;
         User creatorUser = userMapper.selectByPrimaryKey(creatorUserId);
 
         user.setCreateId(creatorUserId);
@@ -152,15 +145,14 @@ public class UserServiceImpl implements UserService {
     /**
      * 分页条件查询用户列表
      * @param form
-     * @param request
+     * @param companyId
      * @return
      */
     @Override
-    public Response getUserListByPage(RequestParamPage<User> form, HttpServletRequest request) {
+    public Response getUserListByPage(RequestParamPage<User> form, int companyId) {
         PageHelper.startPage(form.getPage(), form.getPageSize());
 
         User user = form.getParam();
-        int companyId = JwtUtils.getCompanyIdByRequest(request);
         user.setCompanyId(companyId);
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
@@ -186,8 +178,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Response updatePassword(String oldPassword, String newPassword, HttpServletRequest request) {
-        int userId = JwtUtils.getUserIdByRequest(request);
+    public Response updatePassword(String oldPassword, String newPassword, int userId) {
         User user = userMapper.selectByPrimaryKey(userId);
         boolean flag = passwordEncoder.matches(oldPassword, user.getPassword());
         if(flag){
@@ -228,5 +219,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer getAdminRoleIdByCompanyId(Integer companyId) {
         return userMapper.getAdminRoleIdByCompanyId(companyId);
+    }
+
+    @Override
+    public Response getUserList(int companyId) {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("companyId",companyId);
+        criteria.andNotEqualTo("delFlag",1);
+        criteria.andNotEqualTo("statue",0);
+        List<User> userList = userMapper.selectByExample(example);
+        return ResponseUtils.successData(userList);
     }
 }

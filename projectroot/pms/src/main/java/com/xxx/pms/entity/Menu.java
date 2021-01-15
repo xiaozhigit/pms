@@ -2,9 +2,7 @@ package com.xxx.pms.entity;
 
 import lombok.Data;
 
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -19,6 +17,7 @@ public class Menu {
      *   ID
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     /**

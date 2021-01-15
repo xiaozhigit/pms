@@ -11,7 +11,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+
 
 /***
  * @Author: chenjun
@@ -32,11 +32,13 @@ public class UserController {
     @ApiOperation(value = "增加用户", notes = "增加用户")
     @ApiImplicitParams({
             @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "companyId" , value = "公司id" , dataType = "int", required=true),
+            @ApiImplicitParam(name = "createId" , value = "创建人id" , dataType = "int", required=true),
             @ApiImplicitParam(name = "form" , value = "创建用户表单" , dataType = "User")
     })
     @PostMapping("addUser")
-    public Response addUser(@RequestBody User form, HttpServletRequest request){
-        return userService.addUser(form, request);
+    public Response addUser(@RequestBody User form, int companyId, int createId){
+        return userService.addUser(form, companyId, createId);
     }
 
 
@@ -85,10 +87,24 @@ public class UserController {
 
 
     @ApiOperation(value = "分页条件查询用户列表", notes = "分页条件查询用户列表")
-    @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "companyId" , value = "公司id" , dataType = "int", required=true)
+    })
     @PostMapping("getUserListByPage")
-    public Response getUserListByPage(@RequestBody RequestParamPage<User> form, HttpServletRequest request){
-        return userService.getUserListByPage(form, request);
+    public Response getUserListByPage(@RequestBody RequestParamPage<User> form, int companyId){
+        return userService.getUserListByPage(form, companyId);
+    }
+
+
+    @ApiOperation(value = "下拉列表选择用户", notes = "下拉列表选择用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "companyId" , value = "公司id" , dataType = "int", required=true)
+    })
+    @PostMapping("getUserList")
+    public Response getUserList(int companyId){
+        return userService.getUserList(companyId);
     }
 
 
@@ -99,11 +115,12 @@ public class UserController {
     @ApiImplicitParams({
             @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
             @ApiImplicitParam(name = "oldPassword" , value = "旧密码" , dataType = "string"),
-            @ApiImplicitParam(name = "newPassword" , value = "新密码" , dataType = "string")
+            @ApiImplicitParam(name = "newPassword" , value = "新密码" , dataType = "string"),
+            @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "int", required=true)
     })
     @PostMapping("updatePassword")
-    public Response updatePassword(String oldPassword, String newPassword, HttpServletRequest request) {
-        return userService.updatePassword(oldPassword,newPassword,request);
+    public Response updatePassword(String oldPassword, String newPassword, int userId) {
+        return userService.updatePassword(oldPassword,newPassword,userId);
     }
 
 }

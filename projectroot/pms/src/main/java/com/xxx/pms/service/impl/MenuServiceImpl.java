@@ -5,6 +5,7 @@ import com.xxx.pms.entity.*;
 import com.xxx.pms.mapper.*;
 import com.xxx.pms.po.MenuDto;
 import com.xxx.pms.po.RequestParamPage;
+import com.xxx.pms.service.CompanyService;
 import com.xxx.pms.service.MenuService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,12 +34,18 @@ public class MenuServiceImpl implements MenuService {
     private CompanyMenuMapper companyMenuMapper;
 
     @Resource
-    private UserMapper userMapper;
+    private CompanyService companyService;
 
-
+    @Transactional
     @Override
     public int add(Menu menu) {
-        return menuMapper.insertSelective(menu);
+        menuMapper.insertSelective(menu);
+        //新增菜单时，公司管理员公布新增菜单
+        RoleMenu roleMenu=new RoleMenu();
+        roleMenu.setMenuId(menu.getId());
+        Role role=companyService.getCompanyAdminRole(0);
+        roleMenu.setRoleId(role.getId());
+        return roleMenuMapper.insert(roleMenu);
     }
 
     @Override

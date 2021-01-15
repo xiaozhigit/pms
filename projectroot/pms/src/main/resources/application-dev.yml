@@ -45,6 +45,7 @@ logging:
   level:
     root: info
     com.xxx.pms.mapper: debug
+    springframework.boot.autoconfigure: error
   config: classpath:logback.xml
 #eureka:
 #  client:

@@ -22,4 +22,9 @@ public class RoleMenuServiceImpl  implements RoleMenuService {
     public int deleteByRoleIdAndMenuId(RoleMenu roleMenu) {
         return roleMenuMapper.deleteByRoleIdAndMenuId(roleMenu);
     }
+
+    @Override
+    public int delete(RoleMenu roleMenu) {
+        return roleMenuMapper.delete(roleMenu);
+    }
 }

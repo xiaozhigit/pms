@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class CompanyServiceImpl implements CompanyService {
                 Company updateCompany = new Company();
                 updateCompany.setId(company.getId());
                 updateCompany.setAdminId((Integer) resultMap.get("msg"));
-                companyMapper.updateByPrimaryKeySelective(company);
+                companyMapper.updateByPrimaryKeySelective(updateCompany);
                 resMap.put("msg", "添加公司成功");
                 return resMap;
             }
@@ -123,15 +124,45 @@ public class CompanyServiceImpl implements CompanyService {
         }
         return company;
     }
-
+    @Transactional
     @Override
     public int addCompanyMenus(Integer companyId, List<Integer> menuIds) {
-        CompanyMenu companyMenu=new CompanyMenu();
+        List<Integer> deleteMenuIds = new ArrayList<>();
+        List<Menu> companyMenus = getCompanyMenus(companyId);
+        for (Menu companyMenu : companyMenus) {
+            if (!menuIds.contains(companyMenu.getId())) {
+                deleteMenuIds.add(companyMenu.getId());
+            }
+        }
+
+        if(deleteMenuIds.size()>0){
+            List<Role> roles = getCompanyRoles(companyId);
+            RoleMenu roleMenu = new RoleMenu();
+            for (Role role : roles) {
+                for (Integer deleteMenuId : deleteMenuIds) {
+                    roleMenu.setMenuId(deleteMenuId);
+                    roleMenu.setRoleId(role.getId());
+                    roleMenuService.deleteByRoleIdAndMenuId(roleMenu);
+                }
+            }
+        }
+
+
+        //清空公司所有菜单
+        CompanyMenu companyMenu = new CompanyMenu();
         companyMenu.setCompanyId(companyId);
         companyMenuMapper.delete(companyMenu);
-        for (Integer menuId:menuIds) {
+        //清空公司管理员角色所有菜单
+        Integer companyAdminRoleId=getCompanyAdminRole(companyId).getId();
+        RoleMenu roleMenu=new RoleMenu();
+        roleMenu.setRoleId(companyAdminRoleId);
+        roleMenuService.delete(roleMenu);
+        //新增公司菜单及同步公司管理员菜单
+        for (Integer menuId : menuIds) {
             companyMenu.setMenuId(menuId);
             companyMenuMapper.insert(companyMenu);
+            roleMenu.setMenuId(menuId);
+            roleMenuService.add(roleMenu);
         }
         return 1;
     }
@@ -191,6 +222,11 @@ public class CompanyServiceImpl implements CompanyService {
     private List<Role> getCompanyRoles(Integer companyId){
        return roleService.getCompanyRoles(companyId);
     };
+
+    @Override
+    public   Role getCompanyAdminRole(Integer companyId){
+        return roleService.getCompanyAdminRole(companyId);
+    }
 
 
 

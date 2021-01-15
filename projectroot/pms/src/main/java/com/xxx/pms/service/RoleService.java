@@ -71,4 +71,11 @@ public interface RoleService {
      * @return 公司角色集合
      */
     List<Role> getCompanyRoles(Integer companyId);
+
+    /**
+     * 通过公司id查询公司管理员角色
+     * @param companyId 公司id
+     * @return 公司管理员角色
+     */
+    Role getCompanyAdminRole(Integer companyId);
 }

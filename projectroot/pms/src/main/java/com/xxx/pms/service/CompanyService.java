@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.Company;
 import com.xxx.pms.entity.CompanyMenu;
 import com.xxx.pms.entity.Menu;
+import com.xxx.pms.entity.Role;
 import com.xxx.pms.po.RequestParamPage;
 
 import java.util.List;
@@ -60,4 +61,9 @@ public interface CompanyService {
      * @return 新增结果
      */
     int addCompanyMenus(Integer companyId, List<Integer> menuIds);
+    /**
+     * 查询公司管理员角色
+     * @return 公司管理员角色
+     */
+    Role getCompanyAdminRole(Integer companyId);
 }
