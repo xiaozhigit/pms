@@ -54,7 +54,7 @@ public class FileServiceImpl implements FileService {
         String fileBasePath = ymlConstant.getUserFileBasePath();
         File f = new File(fileBasePath);
         if (!f.exists()) {
-            f.mkdir();
+            f.mkdirs();
         }
         File fc = new File(fileBasePath+pathSeparator+userId);
         if (!fc.exists()) {

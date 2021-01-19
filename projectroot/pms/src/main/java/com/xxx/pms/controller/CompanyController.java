@@ -15,11 +15,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 @Api(tags={"公司管理"})
 @RestController
@@ -36,9 +32,7 @@ public class CompanyController {
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
     @PostMapping("addCompany")
     public Response addCompany(@RequestBody Company company){
-        Map result= companyService.add(company);
-        return (int)result.get("code")==200? ResponseUtils.success():
-                ResponseUtils.fillState(new String[]{"400", (String) result.get("msg")});
+        return companyService.add(company);
     }
 
     @ApiOperation(value = "通过公司id删除公司", notes="删除公司接口")
@@ -48,8 +42,7 @@ public class CompanyController {
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
     @PostMapping("deleteCompanyById")
     public Response deleteCompanyById(Integer id){
-        int  result= companyService.deleteById(id);
-        return result>0?ResponseUtils.success(): ResponseUtils.error();
+      return companyService.deleteById(id);
     }
 
     @ApiOperation(value = "通过公司id更新公司", notes="更新公司接口")
@@ -59,8 +52,7 @@ public class CompanyController {
     @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true)
     @PostMapping("updateCompanyById")
     public Response updateCompanyById(@RequestBody Company company){
-        int  result= companyService.updateById(company);
-        return result>0?ResponseUtils.success(): ResponseUtils.error();
+        return companyService.updateById(company);
     }
 
     @ApiOperation(value = "分页条件查询公司", notes="分页条件查询公司接口")

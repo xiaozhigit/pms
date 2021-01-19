@@ -6,18 +6,24 @@ import com.xxx.pms.entity.*;
 import com.xxx.pms.mapper.CompanyMapper;
 import com.xxx.pms.mapper.CompanyMenuMapper;
 import com.xxx.pms.po.RequestParamPage;
+import com.xxx.pms.response.Response;
 import com.xxx.pms.service.CompanyService;
 import com.xxx.pms.service.RoleMenuService;
 import com.xxx.pms.service.RoleService;
 import com.xxx.pms.service.UserService;
+import com.xxx.pms.util.PinYinUtils;
+import com.xxx.pms.util.ResponseUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.xxx.pms.constant.AccessStateCodeConstant.*;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
@@ -39,12 +45,16 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional
-    public Map add(Company company) {
-        Map resMap = new HashMap<String ,Object>();
-        resMap.put("code", 200);
+    public Response add(Company company) {
+        if (companyNameIsExist(company.getName())) {
+            return ResponseUtils.fillState(COMPANY_REPEAT);
+        }
+        if (userService.phoneIsExist(company.getPhone())) {
+            return ResponseUtils.fillState(PHONE_NUMBER_REPEAT);
+        }
         //设置公司状态为正常
         company.setStatue(true);
-        int result = companyMapper.insert(company);
+        int result = companyMapper.insertSelective(company);
         if (result > 0) {
             Role role = createCompanyAdminRole(company);
             //创建公司管理员用户
@@ -55,32 +65,45 @@ public class CompanyServiceImpl implements CompanyService {
                 updateCompany.setId(company.getId());
                 updateCompany.setAdminId((Integer) resultMap.get("msg"));
                 companyMapper.updateByPrimaryKeySelective(updateCompany);
-                resMap.put("msg", "添加公司成功");
-                return resMap;
+                return ResponseUtils.success();
             }
-            return resultMap;
+            return ResponseUtils.fillState(FAIL);
         }
-        resMap.put("code", 400);
-        resMap.put("msg", "新增失败");
-        return resMap;
-
+        return ResponseUtils.fillState(FAIL);
     }
 
     @Override
-    public int deleteById(Integer id) {
+    public Response deleteById(Integer id) {
         //设置公司状态为禁用
         Company company=new Company();
         company.setId(id);
         company.setStatue(false);
-        return updateById(company) ;
+        int result = companyMapper.updateByPrimaryKeySelective(company);
+        return result > 0 ? ResponseUtils.success() : ResponseUtils.error();
     }
 
     @Override
-    public int updateById(Company company) {
+    public Response updateById(Company company) {
+        String companyName=company.getName();
+        if (!StringUtils.isEmpty(companyName)&&companyNameIsRepeat(company)) {
+            return ResponseUtils.fillState(COMPANY_REPEAT);
+        }
+        if (!StringUtils.isEmpty(company.getPhone()) || !StringUtils.isEmpty(company.getAdminName())) {
+            Company company1=selectById(company.getId());
+            if (userService.phoneIsRepeat(company1.getAdminId(),company.getPhone())) {
+                return ResponseUtils.fillState(PHONE_NUMBER_REPEAT);
+            }
+            company1.setPhone(company.getPhone());
+            company1.setAdminName(company.getAdminName());
+            updateCompanyAdminInfo(company1);
+        }
         //公司编辑管理员不变
         company.setAdminId(null);
-        return companyMapper.updateByPrimaryKeySelective(company);
+        int result = companyMapper.updateByPrimaryKeySelective(company);
+        return result > 0 ? ResponseUtils.success() : ResponseUtils.error();
     }
+
+
 
     @Override
     public Company selectById(Integer id) {
@@ -146,8 +169,6 @@ public class CompanyServiceImpl implements CompanyService {
                 }
             }
         }
-
-
         //清空公司所有菜单
         CompanyMenu companyMenu = new CompanyMenu();
         companyMenu.setCompanyId(companyId);
@@ -177,8 +198,8 @@ public class CompanyServiceImpl implements CompanyService {
         role.setCompanyId(company.getId());
         role.setCreateId(company.getCreateId());
         role.setCreateName(company.getCreateName());
-        role.setDescription(company.getName()+"公司管理员");
-        role.setName(company.getName()+"公司管理员");
+        role.setDescription(company.getName()+"的管理员");
+        role.setName("管理员");
         roleService.add(role);
         return role;
     }
@@ -196,8 +217,8 @@ public class CompanyServiceImpl implements CompanyService {
         user.setCreateId(company.getCreateId());
         user.setPhone(company.getPhone());
         user.setRoleId(roleId);
-        user.setName(company.getName()+"管理员");
-        user.setUsername(company.getName()+"管理员");
+        user.setName(company.getAdminName());
+        user.setUsername(company.getPhone());
         return userService.addUser(user);
     }
 
@@ -226,6 +247,55 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public   Role getCompanyAdminRole(Integer companyId){
         return roleService.getCompanyAdminRole(companyId);
+    }
+
+    /**
+     * 判断公司名称是否重复
+     * @param company 公司实体
+     * @return 结果
+     */
+    public Boolean companyNameIsRepeat(Company company){
+        return companyMapper.companyNameIsRepeat(company)>0;
+    }
+
+    /**
+     * 判断公司名称是否存在
+     * @param companyName 公司名称
+     * @return 结果
+     */
+    private Boolean companyNameIsExist(String companyName){
+        return getCompanyListByName(companyName).size()>0;
+    }
+
+    /**
+     * 根据公司名称查询公司
+     * @param companyName 公司名称
+     * @return 公司集合
+     */
+    public List<Company> getCompanyListByName(String companyName){
+        Company company=new Company();
+        company.setName(companyName.trim());
+        company.setStatue(true);
+      return companyMapper.select(company);
+    }
+
+    /**
+     * 更新公司管理员信息
+     * @param company 公司
+     */
+    private void updateCompanyAdminInfo(Company company) {
+        User user = new User();
+        user.setId(company.getAdminId());
+        if (!StringUtils.isEmpty(company.getPhone())) {
+            user.setUsername(company.getPhone());
+            user.setPhone(company.getPhone());
+        }
+        if (!StringUtils.isEmpty(company.getAdminName())) {
+            user.setName(company.getAdminName());
+            String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(user.getName());
+            user.setInitials(pinYinHeadChar);
+        }
+        userService.updateByPrimaryKeySelective(user);
     }
 
 

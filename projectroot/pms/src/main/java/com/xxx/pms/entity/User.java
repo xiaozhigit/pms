@@ -5,10 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.omg.CORBA.INTERNAL;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Data
@@ -21,6 +18,10 @@ public class User {
      *   公司ID
      */
     private Integer companyId;
+
+
+    @ApiModelProperty(value = "项目Id")
+    private Integer projectId;
 
     @ApiModelProperty(value = "昵称/姓名", name = "name", dataType = "String")
     private String name;
@@ -73,6 +74,14 @@ public class User {
      *   0删除1正常
      */
     private Boolean delFlag;
+
+    @Transient
+    private String roleName;
+
+
+    @ApiModelProperty(value="项目名称")
+    @Transient
+    private String projectName;
 
 
 }

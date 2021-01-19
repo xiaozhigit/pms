@@ -1,6 +1,7 @@
 package com.xxx.pms.mapper;
 
 import com.xxx.pms.entity.Company;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -14,4 +15,8 @@ public interface CompanyMapper extends Mapper<Company> {
      * @return 符合条件集合
      */
     List<Company> selectByCondition(Company param);
+
+
+    @Select("select count(*) from sys_company where name =#{name} and id!=#{id}")
+    int  companyNameIsRepeat(Company company);
 }

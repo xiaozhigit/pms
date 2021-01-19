@@ -1,9 +1,11 @@
 package com.xxx.pms.controller;
 
 import com.xxx.pms.entity.Project;
+import com.xxx.pms.entity.TaskUser;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.ProjectService;
+import com.xxx.pms.util.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /***
  * @Author: chenjun
@@ -80,4 +83,42 @@ public class ProjectController {
         return projectService.getProjectListByPage(form);
     }
 
+
+    @ApiOperation(value = "通过用户id查询用户参与的项目", notes = "通过用户id获取参与的项目接口")
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("getUserJoinProjects")
+    public Response getUserJoinProjects(Integer userId) {
+        List<Project> result = projectService.getUserJoinProjects(userId);
+        return ResponseUtils.successData(result);
+    }
+
+
+    @ApiOperation(value = "获取项目下所有参与人的任务", notes = "通过项目下所有参与人的任务接口")
+    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
+    @PostMapping("projectTaskUser")
+    public Response projectTaskUser(Integer projectId) {
+        List<TaskUser> result = projectService.getProjectTaskUser(projectId);
+        return ResponseUtils.successData(result);
+    }
+
+    @ApiOperation(value = "下拉列表选择项目", notes = "下拉列表选择项目")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "companyId" , value = "公司id" , dataType = "Integer", required=true)
+    })
+    @PostMapping("getProjectList")
+    public Response getProjectList(Integer companyId){
+        return projectService.getProjectList(companyId);
+    }
+
+    @ApiOperation(value = "切换项目", notes = "切换项目")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "projectId" , value = "项目id" , dataType = "Integer", required=true),
+            @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "Integer", required=true)
+    })
+    @PostMapping("changeProject")
+    public Response changeProject(Integer userId,Integer projectId){
+        return projectService.changeProject(userId,projectId);
+    }
 }

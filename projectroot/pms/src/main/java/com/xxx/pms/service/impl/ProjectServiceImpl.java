@@ -5,11 +5,15 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.Project;
 import com.xxx.pms.entity.ProjectUser;
+import com.xxx.pms.entity.User;
+import com.xxx.pms.entity.TaskUser;
 import com.xxx.pms.mapper.ProjectMapper;
 import com.xxx.pms.mapper.ProjectUserMapper;
+import com.xxx.pms.mapper.TaskUserMapper;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.ProjectService;
+import com.xxx.pms.service.UserService;
 import com.xxx.pms.util.CommonUtils;
 import com.xxx.pms.util.PinYinUtils;
 import com.xxx.pms.util.ResponseUtils;
@@ -28,11 +32,16 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectMapper projectMapper;
     @Resource
     ProjectUserMapper projectUserMapper;
+    @Resource
+    private TaskUserMapper taskUserMapper;
+    @Resource
+    private UserService userService;
 
     @Override
     public Response addProject(Project project) {
         String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(project.getName());
         project.setInitials(pinYinHeadChar);
+        project.setState(0);
         projectMapper.insertSelective(project);
         List<ProjectUser> projectUserList = project.getProjectUserList();
         if(projectUserList != null){
@@ -117,5 +126,41 @@ public class ProjectServiceImpl implements ProjectService {
 
         pageInfo.setList(projectList);
         return ResponseUtils.successData(pageInfo);
+    }
+
+    @Override
+    public List<Project> getUserJoinProjects(Integer userId) {
+        return projectMapper.selectProjectByUserId(userId);
+    }
+
+    @Override
+    public List<TaskUser> getProjectTaskUser(Integer projectId) {
+        return taskUserMapper.selectByProject(projectId);
+    }
+
+    @Override
+    public Response getProjectList(int companyId) {
+        Example example = new Example(Project.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("companyId",companyId);
+        criteria.andNotEqualTo("delFlag",1);
+        List<Project> projectList = projectMapper.selectByExample(example);
+        return ResponseUtils.successData(projectList);
+    }
+
+    @Override
+    public Response changeProject(Integer userId, Integer projectId) {
+        User user=new User();
+        user.setId(userId);
+        user.setProjectId(projectId);
+        int result= userService.updateByPrimaryKeySelective(user);
+        return result>0?ResponseUtils.success():ResponseUtils.error();
+    }
+
+    @Override
+    public String getProjectNameById(Integer projectId) {
+        Project project = projectMapper.selectByPrimaryKey(projectId);
+        if (project != null) return project.getName();
+        return null;
     }
 }

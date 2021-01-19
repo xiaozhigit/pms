@@ -6,6 +6,7 @@ import com.xxx.pms.entity.CompanyMenu;
 import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.Role;
 import com.xxx.pms.po.RequestParamPage;
+import com.xxx.pms.response.Response;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,11 @@ import java.util.Map;
  */
 public interface CompanyService {
 
-    Map add(Company company);
+    Response add(Company company);
 
-    int deleteById(Integer id);
+    Response deleteById(Integer id);
 
-    int updateById(Company company);
+    Response updateById(Company company);
 
     Company selectById(Integer id);
 

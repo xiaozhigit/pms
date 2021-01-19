@@ -25,8 +25,6 @@ public class TaskServiceImpl implements TaskService {
     @Resource
     private WebSocketService webSocketService;
 
-    @Resource
-    private TaskMapper taskMapper;
 
     @Override
     public int add(TaskUser taskUser) {
@@ -54,15 +52,7 @@ public class TaskServiceImpl implements TaskService {
         return taskUserMapper.selectByUserId(userId);
     }
 
-    @Override
-    public List<Project> getUserJoinProjects(Integer userId) {
-        return projectMapper.selectProjectByUserId(userId);
-    }
 
-    @Override
-    public List<TaskUser> getProjectTaskUser(Integer projectId) {
-        return taskUserMapper.selectByProject(projectId);
-    }
 
     //通过项目任务id查询项目信息
     private Project getProjectByTaskId(Integer taskId) {

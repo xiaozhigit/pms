@@ -32,13 +32,11 @@ public class UserController {
     @ApiOperation(value = "增加用户", notes = "增加用户")
     @ApiImplicitParams({
             @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
-            @ApiImplicitParam(name = "companyId" , value = "公司id" , dataType = "int", required=true),
-            @ApiImplicitParam(name = "createId" , value = "创建人id" , dataType = "int", required=true),
-            @ApiImplicitParam(name = "form" , value = "创建用户表单" , dataType = "User")
+            @ApiImplicitParam(name = "user" , value = "创建用户表单" , dataType = "User")
     })
     @PostMapping("addUser")
-    public Response addUser(@RequestBody User form, int companyId, int createId){
-        return userService.addUser(form, companyId, createId);
+    public Response addUser(@RequestBody User user){
+        return userService.insertUser(user);
     }
 
 

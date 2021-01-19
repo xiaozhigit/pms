@@ -2,11 +2,16 @@ package com.xxx.pms.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.xxx.pms.constant.AccessStateCodeConstant;
 import com.xxx.pms.constant.YmlConstant;
+import com.xxx.pms.entity.Company;
+import com.xxx.pms.entity.Project;
 import com.xxx.pms.entity.User;
+import com.xxx.pms.mapper.CompanyMapper;
 import com.xxx.pms.mapper.UserMapper;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
+import com.xxx.pms.service.ProjectService;
 import com.xxx.pms.service.UserService;
 import com.xxx.pms.util.CommonUtils;
 import com.xxx.pms.util.PinYinUtils;
@@ -21,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.xxx.pms.constant.AccessStateCodeConstant.PHONE_NUMBER_REPEAT;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,6 +36,11 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
     @Resource
     UserMapper userMapper;
+    @Resource
+    CompanyMapper companyMapper;
+    @Resource
+    private ProjectService projectService;
+
 
 
     /**
@@ -37,13 +49,10 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Response addUser(User user, int companyId ,int createId) {
+    public Response insertUser(User user) {
         //验证用户名(同手机号)是否存在
-        User checkUser = new User();
-        checkUser.setUsername(user.getPhone());
-        List<User> checkUserList = userMapper.select(checkUser);
-        if(checkUserList.size() > 0){
-            return ResponseUtils.errorMessage(new String[]{"200","用户名(手机号)已存在，请重新输入！"},null);
+        if(this.phoneIsExist(user.getPhone().trim())){
+            return  ResponseUtils.fillState(PHONE_NUMBER_REPEAT);
         }
         String name = user.getName();
         String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(name);
@@ -57,13 +66,6 @@ public class UserServiceImpl implements UserService {
             encodePassword = passwordEncoder.encode(password);
         }
         user.setPassword(encodePassword);
-        user.setCompanyId(companyId);
-        //获取创建人的信息
-        int creatorUserId = createId;
-        User creatorUser = userMapper.selectByPrimaryKey(creatorUserId);
-
-        user.setCreateId(creatorUserId);
-        user.setCreateName(creatorUser.getName());
         user.setUsername(user.getPhone());
         user.setStatue(true);
         userMapper.insertSelective(user);
@@ -74,11 +76,6 @@ public class UserServiceImpl implements UserService {
     public Map addUser(User user) {
         Map returnMap=new HashMap<String,Object>();
         returnMap.put("code",200);
-        //验证用户名(同手机号)是否存在
-        if(phoneIsExist(user.getPhone())){
-            returnMap.put("code",400);
-            returnMap.put("msg","手机号已存在，请重新输入");
-        }
         String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(user.getName());
         user.setInitials(pinYinHeadChar);
         String encodePassword = "";
@@ -107,10 +104,10 @@ public class UserServiceImpl implements UserService {
     public Response updateUser(User user) {
         //验证用户名(同手机号)是否存在
         User checkUser = new User();
-        checkUser.setUsername(user.getPhone());
+        checkUser.setPhone(user.getPhone());
         List<User> checkUserList = userMapper.select(checkUser);
-        if(checkUserList.size() >1){
-            return ResponseUtils.errorMessage(new String[]{"200","用户名(手机号)已存在，请重新输入！"},null);
+        if(checkUserList.size() > 0){
+            return ResponseUtils.errorMessage(PHONE_NUMBER_REPEAT,null);
         }
         String name = user.getName();
         String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(name);
@@ -120,6 +117,11 @@ public class UserServiceImpl implements UserService {
         return ResponseUtils.success();
     }
 
+    @Override
+    public int updateByPrimaryKeySelective(User user){
+       return  userMapper.updateByPrimaryKeySelective(user);
+    }
+
     /**
      * 查询用户
      * @param id
@@ -127,8 +129,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public Response getUserById(int id) {
-        User user = userMapper.selectByPrimaryKey(id);
-        return ResponseUtils.successData(user);
+        User user = userMapper.selectUserById(id);
+        user.setProjectName(projectService.getProjectNameById(user.getProjectId()));
+        Company company = companyMapper.selectByPrimaryKey(user.getCompanyId());
+        Map<String,Object> data = new HashMap<>();
+        data.put("user",user);
+        data.put("company",company);
+        return ResponseUtils.successData(data);
     }
 
     /**
@@ -154,24 +161,7 @@ public class UserServiceImpl implements UserService {
 
         User user = form.getParam();
         user.setCompanyId(companyId);
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        if(CommonUtils.isNotEmpty(user.getCompanyId())){
-            criteria.andEqualTo("companyId",user.getCompanyId());
-        }
-        if(CommonUtils.isNotEmpty(user.getName())){
-            criteria.andLike("name","%"+user.getName()+"%")
-                    .orLike("initials","%"+user.getName()+"%");
-        }
-        if(CommonUtils.isNotEmpty(user.getPhone())){
-            criteria.andLike("phone","%"+user.getPhone()+"%");
-        }
-
-        if(CommonUtils.isNotEmpty(user.getRoleId())){
-            criteria.andEqualTo("roleId",user.getRoleId());
-        }
-        example.setOrderByClause("gmt_create desc");
-        List<User> userList = userMapper.selectByExample(example);
+        List<User> userList = userMapper.selectUserList(user);
 
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         return ResponseUtils.successData(pageInfo);
@@ -186,7 +176,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(newPasswordEncoder);
             userMapper.updateByPrimaryKeySelective(user);
         }else {
-            return ResponseUtils.errorMessage(new String[]{"200","旧密码输入错误"},null);
+            return ResponseUtils.errorMessage(AccessStateCodeConstant.PASSWORD_INFO,null);
         }
         return ResponseUtils.success();
     }
@@ -215,6 +205,11 @@ public class UserServiceImpl implements UserService {
     public Boolean phoneIsExist(String phoneNumber){
         return userMapper.selectByPhoneNumber(phoneNumber)>0;
     };
+
+    @Override
+    public Boolean phoneIsRepeat(Integer userId, String phoneNumber) {
+        return userMapper.selectPhoneIsRepeat(userId,phoneNumber)>0;
+    }
 
     @Override
     public Integer getAdminRoleIdByCompanyId(Integer companyId) {

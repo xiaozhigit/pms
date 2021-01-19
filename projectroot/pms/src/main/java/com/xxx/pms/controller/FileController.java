@@ -4,7 +4,6 @@ package com.xxx.pms.controller;
 import com.xxx.pms.entity.SysFile;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.FileService;
-import com.xxx.pms.util.JwtUtils;
 import com.xxx.pms.util.ResponseUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,16 +12,14 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import static com.xxx.pms.constant.AccessStateCodeConstant.FILE_EMPTY;
+import static com.xxx.pms.constant.AccessStateCodeConstant.FILE_UPLOAD_FAIL;
 
 /**
  * (SysFile)控制层
- *
- * @author makejava
- * @since 2020-12-16 11:02:18
  */
 @Api(tags={"文件上传"})
 @RestController
@@ -46,9 +43,9 @@ public class FileController {
             if ((int) result.get("code") == 200) {
                 return ResponseUtils.successData(result.get("msg"));
             }
-            return ResponseUtils.errorMessage(new String[]{"500", (String) result.get("msg")}, null);
+            return ResponseUtils.fillState(FILE_UPLOAD_FAIL);
         }
-        return ResponseUtils.errorMessage(new String[]{"500", "上传文件不能为空"}, null);
+        return ResponseUtils.fillState(FILE_EMPTY);
     }
 
 
@@ -59,14 +56,14 @@ public class FileController {
             @ApiImplicitParam(name = "userId" , value = "用户id" , dataType = "int", required=true)
     })
     public Response txUpload(@RequestParam("file") MultipartFile file, int userId) {
-        if (!file.isEmpty()) {
-            Map<String, Object> result = fileService.uploadFile(file, userId);
-            if ((int) result.get("code") == 200) {
-                return ResponseUtils.successData(result.get("msg"));
-            }
-            return ResponseUtils.errorMessage(new String[]{"500", (String) result.get("msg")}, null);
+        if (file.isEmpty()) {
+            return ResponseUtils.fillState(FILE_EMPTY);
         }
-        return ResponseUtils.errorMessage(new String[]{"500", "上传文件不能为空"}, null);
+        Map<String, Object> result = fileService.uploadFile(file, userId);
+        if ((int) result.get("code") == 200) {
+            return ResponseUtils.successData(result.get("msg"));
+        }
+        return ResponseUtils.fillState(FILE_UPLOAD_FAIL);
     }
 
 
@@ -82,20 +79,20 @@ public class FileController {
             if (files.length != 0) {
                 for (MultipartFile file : files) {
                     if (file.isEmpty()) {
-                        return ResponseUtils.errorMessage(new String[]{"500", "未发现指定文件"}, null);
+                        return ResponseUtils.fillState(FILE_EMPTY);
                     }
                     Map<String, Object> result = fileService.uploadFile(file, userId);
                     if ((int) result.get("code") == 500) {
-                        return ResponseUtils.fillState(new String[]{"500", (String) result.get("msg")});
+                        return ResponseUtils.fillState(FILE_UPLOAD_FAIL);
                     }
                     list.add((SysFile) result.get("msg"));
                 }
                 return ResponseUtils.successData(list);
             }
-            return ResponseUtils.fillState(new String[]{"500", "文件集合为空"});
+            return ResponseUtils.fillState(FILE_EMPTY);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseUtils.fillState(new String[]{"500", "上传失败"});
+            return ResponseUtils.fillState(FILE_UPLOAD_FAIL);
         }
     }
 

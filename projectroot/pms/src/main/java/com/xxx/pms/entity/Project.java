@@ -43,6 +43,9 @@ public class Project {
     @ApiModelProperty(value = "创建时间", name = "gmtCreate", dataType = "Date")
     private Date gmtCreate;
 
+    @ApiModelProperty(value = "项目状态：0进行中1.完成", name = "gmtCreate", dataType = "Date")
+    private  Integer state;
+
     @ApiModelProperty(value = "1删除0正常", name = "delFlag", dataType = "Boolean")
     private Boolean delFlag;
 

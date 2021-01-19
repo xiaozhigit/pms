@@ -13,7 +13,7 @@ public interface UserService {
      * @param user
      * @return
      */
-    Response addUser(User user, int companyId, int createId);
+    Response insertUser(User user);
 
     /**
      * 新增用户
@@ -28,6 +28,13 @@ public interface UserService {
      * @return
      */
     Response updateUser(User user);
+
+    /**
+     * 更新用户
+     * @param user 用户实体
+     * @return
+     */
+    int updateByPrimaryKeySelective(User user);
 
     /**
      * 查询用户
@@ -75,6 +82,14 @@ public interface UserService {
      * @return 查询结果
      */
     Boolean phoneIsExist(String phoneNumber);
+
+    /**
+     * 查询用户手机号是否重复
+     * @param userId 用户id
+     * @param phoneNumber 手机号
+     * @return 查询结果
+     */
+    Boolean phoneIsRepeat(Integer userId,String phoneNumber);
 
     /**
      * 通过公司id查询公司管理员的角色id

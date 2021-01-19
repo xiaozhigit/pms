@@ -24,7 +24,7 @@ public interface UserMapper extends Mapper<User> {
     int updateUserRoleIdByCompanyIdAndRoleId(@Param("companyId") Integer companyId,@Param("roleId") Integer roleId);
 
 
-    @Select("select count(*) from sys_user where phone=#{phoneNumber}")
+    @Select("select count(*) from sys_user where phone=#{phoneNumber} or username=#{phoneNumber}")
     int selectByPhoneNumber(String phoneNumber);
 
     /**
@@ -34,4 +34,12 @@ public interface UserMapper extends Mapper<User> {
      */
     @Select("select role_id from sys_user where company_id=#{companyId} and id=(select admin_id from sys_company where id=#{companyId})")
     Integer getAdminRoleIdByCompanyId(Integer companyId);
+
+
+    User selectUserById(int id);
+
+    List<User> selectUserList(User user);
+
+    @Select("select count(*) from sys_user where username=#{phoneNumber} and id!=#{userId}")
+    int selectPhoneIsRepeat(@Param("userId") Integer userId, @Param("phoneNumber") String phoneNumber);
 }

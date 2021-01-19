@@ -29,15 +29,20 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public int add(Role role) {
-        return roleMapper.insert(role);
+        return roleMapper.insertSelective(role);
     }
 
     @Override
     @Transactional
     public int deleteById(Integer id) {
+        //将已使用该角色的用户的角色设置为空
         Role role=selectById(id);
-        userService.
-                updateUserRoleIdByCompanyIdAndRoleId(role.getCompanyId(),role.getId());
+        userService.updateUserRoleIdByCompanyIdAndRoleId(role.getCompanyId(),role.getId());
+        //删除角色的菜单
+        RoleMenu roleMenu=new RoleMenu();
+        roleMenu.setRoleId(id);
+        roleMenuMapper.delete(roleMenu);
+        //删除角色数据
         return roleMapper.deleteByPrimaryKey(id);
 
     }
@@ -68,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public PageInfo<Role> selectByPage(RequestParamPage<Role> parameter) {
         PageHelper.startPage(parameter.getPage(),parameter.getPageSize());
-        return new PageInfo<>(roleMapper.select(parameter.getParam()));
+        return new PageInfo<>(roleMapper.selectByCondition(parameter.getParam()));
     }
 
     @Override

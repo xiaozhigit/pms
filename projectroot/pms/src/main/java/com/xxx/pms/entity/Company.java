@@ -66,6 +66,10 @@ public class Company {
     private Integer adminId;
 
 
+    @ApiModelProperty(value = "公司管理员姓名")
+    private String adminName;
+
+
     @ApiModelProperty(value = "公司菜单")
     @Transient
     private List<Menu>   menus;

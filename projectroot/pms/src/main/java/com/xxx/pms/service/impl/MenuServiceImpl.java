@@ -45,7 +45,11 @@ public class MenuServiceImpl implements MenuService {
         roleMenu.setMenuId(menu.getId());
         Role role=companyService.getCompanyAdminRole(0);
         roleMenu.setRoleId(role.getId());
-        return roleMenuMapper.insert(roleMenu);
+        roleMenuMapper.insert(roleMenu);
+        CompanyMenu companyMenu=new CompanyMenu();
+        companyMenu.setCompanyId(0);
+        companyMenu.setMenuId(menu.getId());
+        return companyMenuMapper.insert(companyMenu);
     }
 
     @Override

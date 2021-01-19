@@ -70,12 +70,13 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword("");
             Map<String,Object> data = new HashMap<>();
             data.put("token",token);
-            data.put("user",user);
-            data.put("company",company);
+            data.put("userId",user.getId());
+ //           data.put("user",user);
+//            data.put("company",company);
             return ResponseUtils.successData(data);
         }else {
             //用户或公司被禁用无法登录成功
-            return ResponseUtils.fillState(new String[]{"200","用户或公司被禁用，无法登录"});
+            return ResponseUtils.fillState(AccessStateCodeConstant.LOGIN_INFO);
         }
     }
 

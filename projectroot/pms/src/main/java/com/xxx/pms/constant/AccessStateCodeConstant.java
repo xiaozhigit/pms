@@ -37,6 +37,32 @@ public interface AccessStateCodeConstant {
      * "0004", "您的访问权限不足"
      */
     public static final String[] ACCESS_DENIED = {"0004", "您的访问权限不足"};
+    /**
+     * "0005","公司名称已存在，请更换"
+     */
+    public static final String[] COMPANY_REPEAT= {"0005","公司名称已存在，请更换"};
+    /**
+     * "0006","手机号码已存在，请更换"
+     */
+    public static final String[] PHONE_NUMBER_REPEAT= {"0006","手机号码已存在，请更换"};
+    /**
+     * "0007","上传文件不能为空"
+     */
+    public static final String[] FILE_EMPTY= {"0007","上传文件不能为空"};
+    /**
+     * "0008","上传文件失败"
+     */
+    public static final String[] FILE_UPLOAD_FAIL= {"0008","上传文件失败"};
+
+    /**
+     * "0007","旧密码输入错误"
+     */
+    public static final String[] PASSWORD_INFO= {"0007","旧密码输入错误"};
+
+    /**
+     * "0008","用户或公司被禁用，无法登录"
+     */
+    public static final String[] LOGIN_INFO= {"0008","用户或公司被禁用，无法登录"};
 
     /**
      * "0401", 您还未登录，无权限访问

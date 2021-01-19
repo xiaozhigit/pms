@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ProjectMapper extends Mapper<Project> {
 
-    @Select("select * from project where id in (select project_id from project_user where user_id=#{userId})")
+    @Select("select * from project where id in (select project_id from project_user where user_id=#{userId}) and state=0")
     List<Project> selectProjectByUserId(Integer userId);
 
     @Select("select * from project where id =(select project_id from sys_task where id= #{taskId})")

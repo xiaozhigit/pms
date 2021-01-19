@@ -14,4 +14,6 @@ public interface RoleMapper extends Mapper<Role> {
 
     @Select("select * from sys_role where id=(select role_id from sys_user where id=(select admin_id from sys_company where id=#{companyId}))")
     Role getCompanyAdminRole(Integer companyId);
+
+    List<Role> selectByCondition(Role role);
 }
