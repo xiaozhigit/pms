@@ -97,17 +97,14 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户
-     * @param user
+     * @param user 用户实体
      * @return
      */
     @Override
     public Response updateUser(User user) {
-        //验证用户名(同手机号)是否存在
-        User checkUser = new User();
-        checkUser.setPhone(user.getPhone());
-        List<User> checkUserList = userMapper.select(checkUser);
-        if(checkUserList.size() > 0){
-            return ResponseUtils.errorMessage(PHONE_NUMBER_REPEAT,null);
+        //验证用户名(同手机号)是否重复
+        if(this.phoneIsRepeat(user.getId(),user.getPhone())){
+            return ResponseUtils.fillState(PHONE_NUMBER_REPEAT);
         }
         String name = user.getName();
         String pinYinHeadChar = PinYinUtils.getPinYinHeadChar(name);
@@ -158,11 +155,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public Response getUserListByPage(RequestParamPage<User> form, int companyId) {
         PageHelper.startPage(form.getPage(), form.getPageSize());
-
         User user = form.getParam();
         user.setCompanyId(companyId);
         List<User> userList = userMapper.selectUserList(user);
-
         PageInfo<User> pageInfo = new PageInfo<>(userList);
         return ResponseUtils.successData(pageInfo);
     }
