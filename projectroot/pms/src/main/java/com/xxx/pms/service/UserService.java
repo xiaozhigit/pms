@@ -43,6 +43,8 @@ public interface UserService {
      */
     Response getUserById(int id);
 
+    User  getUserById(Integer userId);
+
     /**
      * 删除用户
      * @param id
@@ -98,4 +100,18 @@ public interface UserService {
     Integer getAdminRoleIdByCompanyId(Integer companyId);
 
     Response getUserList(int companyId);
+
+
+    /**
+     * 根据项目id查询用户任务
+     * @param projectId 项目id
+     * @return 用户集合
+     */
+    List<User> getProjectTaskUser(Integer projectId);
+
+    /**
+     * 根据公司id获取用户id集合
+     * @param companyId 公司id
+     */
+    List<Integer> getUserIdListByCompanyId(Integer companyId);
 }

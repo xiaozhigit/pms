@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.pms.mapper.TaskMapper">
+
+    <select id="getProjectUserProgressTask" resultType="com.xxx.pms.response.ProjectProgressTask">
+        SELECT a.*,task.context
+        FROM (SELECT temp.user_Id,sys_user.name,sys_user.image,temp.task_id FROM sys_user,
+        (SELECT p.user_id,u.task_id FROM project_user p LEFT JOIN sys_task_user u
+        ON p.user_id=u.user_id AND u.state=0 WHERE p.project_id=#{projectId}) AS temp
+        WHERE sys_user.id=temp.user_id) AS a LEFT JOIN sys_task task ON a.task_Id=task.id
+    </select>
+
+</mapper>

@@ -3,7 +3,7 @@ package com.xxx.pms.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.*;
 import com.xxx.pms.mapper.*;
-import com.xxx.pms.po.MenuDto;
+import com.xxx.pms.response.MenuDto;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.service.CompanyService;
 import com.xxx.pms.service.MenuService;

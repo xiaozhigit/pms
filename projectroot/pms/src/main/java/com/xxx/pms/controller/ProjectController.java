@@ -1,7 +1,6 @@
 package com.xxx.pms.controller;
 
 import com.xxx.pms.entity.Project;
-import com.xxx.pms.entity.TaskUser;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.ProjectService;
@@ -89,15 +88,6 @@ public class ProjectController {
     @PostMapping("getUserJoinProjects")
     public Response getUserJoinProjects(Integer userId) {
         List<Project> result = projectService.getUserJoinProjects(userId);
-        return ResponseUtils.successData(result);
-    }
-
-
-    @ApiOperation(value = "获取项目下所有参与人的任务", notes = "通过项目下所有参与人的任务接口")
-    @ApiImplicitParam(value = "鉴权token", name = "Authorization", paramType = "header", dataType = "String", required = true)
-    @PostMapping("projectTaskUser")
-    public Response projectTaskUser(Integer projectId) {
-        List<TaskUser> result = projectService.getProjectTaskUser(projectId);
         return ResponseUtils.successData(result);
     }
 

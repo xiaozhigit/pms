@@ -2,7 +2,7 @@ package com.xxx.pms.controller;
 
 import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.UserFavoriteMenu;
-import com.xxx.pms.po.MenuDto;
+import com.xxx.pms.response.MenuDto;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.MenuService;
 import com.xxx.pms.util.ResponseUtils;

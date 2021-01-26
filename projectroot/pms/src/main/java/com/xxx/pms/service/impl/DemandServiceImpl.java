@@ -26,6 +26,8 @@ public class DemandServiceImpl implements DemandService {
 
     @Override
     public Response addDemand(Demand demand) {
+        demand.setSort(0);
+        demand.setState(0);
         DemandMapper.insertSelective(demand);
         return ResponseUtils.success();
     }
@@ -67,7 +69,7 @@ public class DemandServiceImpl implements DemandService {
         if(CommonUtils.isNotEmpty(Demand.getState())){
             criteria.andEqualTo("state",Demand.getState());
             if(Demand.getState().equals(0)){
-                example.setOrderByClause("sort asc");
+                example.setOrderByClause("sort asc,gmt_create desc");
             }else {
                 example.setOrderByClause("gmt_create desc");
             }

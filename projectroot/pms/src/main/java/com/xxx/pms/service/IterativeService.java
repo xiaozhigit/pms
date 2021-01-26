@@ -41,4 +41,12 @@ public interface IterativeService {
      */
     Response getIterativeListByPage(RequestParamPage<Iterative> form);
 
+
+    /**
+     * 根据项目id查询出未完成的最新迭代的一条数据
+     * @param projectId
+     * @return
+     */
+    Response getIterativeByProjectId(int projectId);
+
 }

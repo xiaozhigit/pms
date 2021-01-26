@@ -80,4 +80,16 @@ public class IterativeController {
         return IterativeService.getIterativeListByPage(form);
     }
 
+
+
+    @ApiOperation(value = "根据项目id查询出未完成的最新迭代的一条数据", notes = "根据项目id查询出未完成的最新迭代的一条数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(value="鉴权token", name="Authorization", paramType="header", dataType="string", required=true),
+            @ApiImplicitParam(name = "projectId" , value = "项目id" , dataType = "int")
+    })
+    @PostMapping("getIterativeByProjectId")
+    public Response getIterativeByProjectId(int projectId){
+        return IterativeService.getIterativeByProjectId(projectId);
+    }
+
 }

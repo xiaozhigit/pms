@@ -5,7 +5,6 @@ import com.github.pagehelper.PageInfo;
 import com.xxx.pms.constant.AccessStateCodeConstant;
 import com.xxx.pms.constant.YmlConstant;
 import com.xxx.pms.entity.Company;
-import com.xxx.pms.entity.Project;
 import com.xxx.pms.entity.User;
 import com.xxx.pms.mapper.CompanyMapper;
 import com.xxx.pms.mapper.UserMapper;
@@ -13,7 +12,6 @@ import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 import com.xxx.pms.service.ProjectService;
 import com.xxx.pms.service.UserService;
-import com.xxx.pms.util.CommonUtils;
 import com.xxx.pms.util.PinYinUtils;
 import com.xxx.pms.util.ResponseUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +20,7 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +67,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encodePassword);
         user.setUsername(user.getPhone());
         user.setStatue(true);
+        user.setDelFlag(false);
         userMapper.insertSelective(user);
         return ResponseUtils.success();
     }
@@ -133,6 +133,11 @@ public class UserServiceImpl implements UserService {
         data.put("user",user);
         data.put("company",company);
         return ResponseUtils.successData(data);
+    }
+
+    @Override
+    public User getUserById(Integer userId) {
+        return userMapper.selectUserById(userId);
     }
 
     /**
@@ -220,5 +225,25 @@ public class UserServiceImpl implements UserService {
         criteria.andNotEqualTo("statue",0);
         List<User> userList = userMapper.selectByExample(example);
         return ResponseUtils.successData(userList);
+    }
+
+    @Override
+    public List<User> getProjectTaskUser(Integer projectId) {
+        return userMapper.getProjectTaskUser(projectId);
+    }
+
+    @Override
+    public List<Integer> getUserIdListByCompanyId(Integer companyId) {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("companyId",companyId);
+        criteria.andNotEqualTo("delFlag",1);
+        criteria.andNotEqualTo("statue",0);
+        List<User> userList = userMapper.selectByExample(example);
+        List<Integer> userIdList = new ArrayList<>();
+        for(User user : userList){
+            userIdList.add(user.getId());
+        }
+        return userIdList;
     }
 }

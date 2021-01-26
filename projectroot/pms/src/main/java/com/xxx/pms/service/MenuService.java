@@ -4,7 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.Menu;
 import com.xxx.pms.entity.Role;
 import com.xxx.pms.entity.UserFavoriteMenu;
-import com.xxx.pms.po.MenuDto;
+import com.xxx.pms.response.MenuDto;
 import com.xxx.pms.po.RequestParamPage;
 
 import java.util.List;

@@ -24,14 +24,15 @@ public class IterativeServiceImpl implements IterativeService {
     IterativeMapper IterativeMapper;
 
     @Override
-    public Response addIterative(Iterative Iterative) {
-        IterativeMapper.insertSelective(Iterative);
+    public Response addIterative(Iterative iterative) {
+        iterative.setState(0);
+        IterativeMapper.insertSelective(iterative);
         return ResponseUtils.success();
     }
 
     @Override
-    public Response updateIterative(Iterative Iterative) {
-        IterativeMapper.updateByPrimaryKeySelective(Iterative);
+    public Response updateIterative(Iterative iterative) {
+        IterativeMapper.updateByPrimaryKeySelective(iterative);
         return ResponseUtils.success();
     }
 
@@ -60,11 +61,32 @@ public class IterativeServiceImpl implements IterativeService {
         if(CommonUtils.isNotEmpty(Iterative.getName())){
             criteria.andLike("name","%"+Iterative.getName()+"%");
         }
+        if(CommonUtils.isNotEmpty(Iterative.getState())){
+            criteria.andEqualTo("state",Iterative.getState());
+        }
         example.setOrderByClause("gmt_create desc");
 
         List<Iterative> IterativeList = IterativeMapper.selectByExample(example);
         PageInfo<Iterative> pageInfo = new PageInfo<>(IterativeList);
         return ResponseUtils.successData(pageInfo);
+    }
+
+    @Override
+    public Response getIterativeByProjectId(int projectId) {
+        Iterative iterative = null;
+        Example example = new Example(Iterative.class);
+        Example.Criteria criteria = example.createCriteria();
+        if(CommonUtils.isNotEmpty(projectId)){
+            criteria.andEqualTo("projectId",projectId);
+        }
+        criteria.andEqualTo("state",0);
+        example.setOrderByClause("gmt_create desc limit 1");
+
+        List<Iterative> iterativeList = IterativeMapper.selectByExample(example);
+        if(iterativeList.size() > 0){
+            iterative = iterativeList.get(0);
+        }
+        return ResponseUtils.successData(iterative);
     }
 
 }

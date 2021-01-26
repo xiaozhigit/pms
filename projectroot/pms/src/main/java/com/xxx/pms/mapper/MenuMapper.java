@@ -20,7 +20,7 @@ public interface MenuMapper extends Mapper<Menu> {
      * @param userId 用户id
      * @return 菜单集合
      */
-    @Select("select * from sys_menu where id in(select menu_id from  sys_role_menu where role_id=(select role_id from sys_user where id=#{userId}))")
+    @Select("select * from sys_menu where id in(select menu_id from  sys_role_menu where role_id=(select role_id from sys_user where id=#{userId})) order by sort")
     List<Menu> selectMenusByUserId(Integer userId);
 
     /**
@@ -28,7 +28,7 @@ public interface MenuMapper extends Mapper<Menu> {
      * @param userId 用户id
      * @return 菜单那集合
      */
-    @Select("select * from sys_menu where id in(select menu_id from sys_user_favorite_menu where user_id=#{userId})")
+    @Select("select * from sys_menu where id in(select menu_id from sys_user_favorite_menu where user_id=#{userId}) order by sort")
     List<Menu> queryFavoriteMenusByUserId(Integer userId);
 
     /**

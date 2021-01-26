@@ -1,7 +1,11 @@
 package com.xxx.pms.entity;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -14,67 +18,81 @@ import java.util.Date;
 @Table(name = "sys_task")
 public class Task {
 
+    @Id
+    @GeneratedValue(generator="JDBC")
     private Integer id;
 
     /**
      
      *   所属项目ID
      */
+    @ApiModelProperty(value = "所属项目ID")
     private Integer projectId;
 
     /**
      
      *   迭代ID
      */
+    @ApiModelProperty(value = "迭代ID")
     private Integer iterative;
 
     /**
      
      *   创建人用户ID
      */
+    @ApiModelProperty(value = "创建人用户ID")
     private Integer createUserId;
 
     /**
      
      *   创建人昵称
      */
+    @ApiModelProperty(value = "创建人昵称")
     private String createUserName;
 
     /**
      
      *   任务内容
      */
+    @ApiModelProperty(value = "任务内容")
     private String context;
 
     /**
      
      *   计划开始时间
      */
+    @ApiModelProperty(value = "计划开始时间")
     private Date gmtPlanStart;
 
     /**
      
      *   计划结束时间
      */
+    @ApiModelProperty(value = "计划结束时间")
     private Date gmtPlanEnd;
 
     /**
      
      *   计划时间分钟数
      */
-    private Short planMinute;
+    @ApiModelProperty(value = "计划时间秒数")
+    private Short planSecond;
 
     /**
      
      *   创建时间
      */
+    @ApiModelProperty(value = "创建时间")
     private Date gmtCreate;
 
+    @ApiModelProperty(value = "完成时间")
+    private Date gmtFinish;
     /**
      
      *   任务状态-1未完成1完成
      */
-    private Byte state;
+    @ApiModelProperty(value = "任务状态-1未完成1完成")
+    private Integer state;
 
 
 }

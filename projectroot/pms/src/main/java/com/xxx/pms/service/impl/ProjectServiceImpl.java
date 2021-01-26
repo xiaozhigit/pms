@@ -6,7 +6,6 @@ import com.github.pagehelper.PageInfo;
 import com.xxx.pms.entity.Project;
 import com.xxx.pms.entity.ProjectUser;
 import com.xxx.pms.entity.User;
-import com.xxx.pms.entity.TaskUser;
 import com.xxx.pms.mapper.ProjectMapper;
 import com.xxx.pms.mapper.ProjectUserMapper;
 import com.xxx.pms.mapper.TaskUserMapper;
@@ -21,8 +20,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -134,8 +132,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<TaskUser> getProjectTaskUser(Integer projectId) {
-        return taskUserMapper.selectByProject(projectId);
+    public List<User> getProjectTaskUser(Integer projectId) {
+        return userService.getProjectTaskUser(projectId);
     }
 
     @Override
@@ -157,10 +155,25 @@ public class ProjectServiceImpl implements ProjectService {
         return result>0?ResponseUtils.success():ResponseUtils.error();
     }
 
+
     @Override
     public String getProjectNameById(Integer projectId) {
         Project project = projectMapper.selectByPrimaryKey(projectId);
         if (project != null) return project.getName();
         return null;
+    }
+
+
+    @Override
+    public List<Integer> getUserIdListByProjectId(Integer projectId) {
+        Example example = new Example(ProjectUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("projectId",projectId);
+        List<ProjectUser> projectUsers = projectUserMapper.selectByExample(example);
+        List<Integer> userIdList = new ArrayList<>();
+        for(ProjectUser projectUser : projectUsers){
+            userIdList.add(projectUser.getUserId());
+        }
+        return userIdList;
     }
 }

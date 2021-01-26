@@ -63,6 +63,14 @@ public interface AccessStateCodeConstant {
      * "0008","用户或公司被禁用，无法登录"
      */
     public static final String[] LOGIN_INFO= {"0008","用户或公司被禁用，无法登录"};
+    /**
+     * "0009","你有任务正在处理，无法创建新的任务"
+     */
+    public static final String[] TASK_PROGRESS= {"0009","你有任务正在处理，无法快速创建新的任务"};
+    /**
+     * "0010","你有任务正在处理，无法开始新的任务"
+     */
+    public static final String[] TASK_START_ERROR= {"0009","你有任务正在处理，无法开始新的任务"};
 
     /**
      * "0401", 您还未登录，无权限访问

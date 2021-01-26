@@ -1,7 +1,7 @@
 package com.xxx.pms.service;
 
 import com.xxx.pms.entity.Project;
-import com.xxx.pms.entity.TaskUser;
+import com.xxx.pms.entity.User;
 import com.xxx.pms.po.RequestParamPage;
 import com.xxx.pms.response.Response;
 
@@ -63,7 +63,7 @@ public interface ProjectService {
      * @param projectId 项目id
      * @return 项目参与人任务集合
      */
-    List<TaskUser> getProjectTaskUser(Integer projectId);
+    List<User> getProjectTaskUser(Integer projectId);
 
     /**
      * 获取公司下的项目
@@ -79,4 +79,11 @@ public interface ProjectService {
      * @return response
      */
     Response changeProject(Integer userId, Integer projectId);
+
+
+    /**
+     * 根据项目id获取该项目下的所有人员id
+     * @param projectId 项目id
+     */
+    List<Integer> getUserIdListByProjectId(Integer projectId);
 }

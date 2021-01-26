@@ -7,6 +7,7 @@ import org.omg.CORBA.INTERNAL;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Table(name = "sys_user")
@@ -17,6 +18,7 @@ public class User {
     /**
      *   公司ID
      */
+    @ApiModelProperty(value="公司ID")
     private Integer companyId;
 
 
@@ -34,6 +36,7 @@ public class User {
     /**
      *   手机号
      */
+    @ApiModelProperty(value = "手机号")
     private String phone;
 
     @ApiModelProperty(value = "用户名", name = "username", dataType = "String")
@@ -42,16 +45,19 @@ public class User {
     /**
      *   密码
      */
+    @ApiModelProperty(value="密码")
     private String password;
 
     /**
      *   角色ID
      */
+    @ApiModelProperty(value="创建人ID")
     private Integer roleId;
 
     /**
      *   创建人ID
      */
+    @ApiModelProperty(value="创建人ID")
     private Integer createId;
 
     @ApiModelProperty(value = "创建人昵称", name = "createName", dataType = "String")
@@ -73,8 +79,11 @@ public class User {
     /**
      *   0删除1正常
      */
+    @ApiModelProperty(value="0删除1正常")
     private Boolean delFlag;
 
+
+    @ApiModelProperty(value="角色名称")
     @Transient
     private String roleName;
 
@@ -82,6 +91,7 @@ public class User {
     @ApiModelProperty(value="项目名称")
     @Transient
     private String projectName;
+
 
 
 }

@@ -20,7 +20,6 @@
         <result property="roleName" column="roleName" jdbcType="VARCHAR"/>
     </resultMap>
 
-
     <select id="selectUserById" resultType="com.xxx.pms.entity.User">
             select u.id, u.company_id, u.project_id, u.name, u.initials, u.phone, u.username, u.password, u.role_id, u.create_id,
             u.create_name, u.image, u.gmt_create, u.statue, u.del_flag, r.name  roleName  from sys_user u left join sys_role r
@@ -78,6 +77,10 @@
             </if>
         </where>
         order by u.gmt_create desc
+    </select>
+
+    <select id="getProjectTaskUser"  resultMap="UserMap">
+             select * from sys_user where project_id=#{projectId};
     </select>
 
 </mapper>

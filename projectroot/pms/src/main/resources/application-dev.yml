@@ -25,7 +25,7 @@ spring:
 #    add-mappings: false
     #static-locations: classpath:classpath:/static/,classpath:/image/,classpath:/resources/
   datasource:
-    url: jdbc:mysql://47.108.113.224:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true
+    url: jdbc:mysql://47.108.113.224:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&useTimezone=true&serverTimezone=GMT%2B8
     username: root
     password: xxxkj123!@#
 #    url: jdbc:mysql://192.168.2.10:3306/task?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2B8
@@ -78,9 +78,9 @@ image:
 file:
   userFileAccessPath: /static/**
 #  本地图片存储地址
-  userFileBasePath : F:/upload/pms/
+  userFileBasePath : D:/upload/pms/
   #文件本地映射地址
-  userFileLocationPath: file:F:/upload/pms/
+  userFileLocationPath: file:D:/upload/pms/
 
 #  linux文件存储地址
 #  path: /data/pms/

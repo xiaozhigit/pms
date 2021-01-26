@@ -3,6 +3,7 @@ package com.xxx.pms.mapper;
 import com.xxx.pms.entity.User;
 import java.util.Map;
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
@@ -14,7 +15,6 @@ import tk.mybatis.mapper.common.Mapper;
 public interface UserMapper extends Mapper<User> {
     // 这种继承Mapper的方式 可以不用mapper.xml文件
 
-    public List<Map<String, Object>> getAllUserBySelf();
 
     @Select("select * from sys_user where 1=1")
     public List<Map<String, Object>> getAllUserBySelfSql();
@@ -42,4 +42,6 @@ public interface UserMapper extends Mapper<User> {
 
     @Select("select count(*) from sys_user where username=#{phoneNumber} and id!=#{userId}")
     int selectPhoneIsRepeat(@Param("userId") Integer userId, @Param("phoneNumber") String phoneNumber);
+
+    List<User> getProjectTaskUser(Integer projectId);
 }
